@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Ogame.Models.Caps>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Growth_factor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Metal_cap)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cristal_cap)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Deuterium_cap)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Energy_cap)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Repair_factor)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Growth_factor)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Metal_cap)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cristal_cap)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Deuterium_cap)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Energy_cap)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Repair_factor)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.CapsID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.CapsID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.CapsID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

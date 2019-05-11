@@ -1,0 +1,58 @@
+﻿@model Ogame.Models.Caps
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<h4>Caps</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Growth_factor" class="control-label"></label>
+                <input asp-for="Growth_factor" class="form-control" />
+                <span asp-validation-for="Growth_factor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Metal_cap" class="control-label"></label>
+                <input asp-for="Metal_cap" class="form-control" />
+                <span asp-validation-for="Metal_cap" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cristal_cap" class="control-label"></label>
+                <input asp-for="Cristal_cap" class="form-control" />
+                <span asp-validation-for="Cristal_cap" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Deuterium_cap" class="control-label"></label>
+                <input asp-for="Deuterium_cap" class="form-control" />
+                <span asp-validation-for="Deuterium_cap" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Energy_cap" class="control-label"></label>
+                <input asp-for="Energy_cap" class="form-control" />
+                <span asp-validation-for="Energy_cap" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Repair_factor" class="control-label"></label>
+                <input asp-for="Repair_factor" class="form-control" />
+                <span asp-validation-for="Repair_factor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

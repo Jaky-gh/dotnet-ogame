@@ -1,0 +1,54 @@
+﻿@model Ogame.Models.Spaceship
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<h4>Spaceship</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="SpaceshipID" />
+            <div class="form-group">
+                <label asp-for="PlanetID" class="control-label"></label>
+                <select asp-for="PlanetID" class="form-control" asp-items="ViewBag.PlanetID"></select>
+                <span asp-validation-for="PlanetID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CapsID" class="control-label"></label>
+                <select asp-for="CapsID" class="form-control" asp-items="ViewBag.CapsID"></select>
+                <span asp-validation-for="CapsID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ActionID" class="control-label"></label>
+                <select asp-for="ActionID" class="form-control" asp-items="ViewBag.ActionID"></select>
+                <span asp-validation-for="ActionID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Level" class="control-label"></label>
+                <input asp-for="Level" class="form-control" />
+                <span asp-validation-for="Level" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Energy" class="control-label"></label>
+                <input asp-for="Energy" class="form-control" />
+                <span asp-validation-for="Energy" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

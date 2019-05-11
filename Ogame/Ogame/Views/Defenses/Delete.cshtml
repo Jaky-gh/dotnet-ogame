@@ -1,0 +1,51 @@
+﻿@model Ogame.Models.Defense
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Defense</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Planet)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Planet.PlanetID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Level)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Level)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Energy)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Energy)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Caps)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Caps.CapsID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Action)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Action.TemporalActionID)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="DefenseID" />
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>
