@@ -37,6 +37,7 @@ namespace Ogame
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
+
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDefaultIdentity<User>()
