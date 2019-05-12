@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Ogame.Models.Spaceship>
+﻿@model Ogame.Models.SpaceshipView.SpaceshipIndexViewInterface
 
 @{
     ViewData["Title"] = "Index";
@@ -6,54 +6,69 @@
 
 <h2>Index</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+@if (Model._user.IsAdmin)
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+}
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Planet)
+                @Html.DisplayNameFor(model => model._spaceship[0].Planet.User)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Level)
+                @Html.DisplayNameFor(model => model._spaceship[0].Planet)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Energy)
+                @Html.DisplayNameFor(model => model._spaceship[0].Level)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Caps)
+                @Html.DisplayNameFor(model => model._spaceship[0].Energy)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Action)
+                @Html.DisplayNameFor(model => model._spaceship[0].Caps)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model._spaceship[0].Action)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Planet.PlanetID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Level)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Energy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Caps.CapsID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Action.TemporalActionID)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.SpaceshipID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.SpaceshipID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.SpaceshipID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model._spaceship)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Planet.User.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Planet.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Level)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Energy)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Caps.CapsID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Action.Type)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.SpaceshipID">Details</a>
+                    @if (Model._user.IsAdmin)
+                    {
+                        <p>
+                            <a asp-action="Edit" asp-route-id="@item.SpaceshipID">Edit</a> |
+                            <a asp-action="Delete" asp-route-id="@item.SpaceshipID">Delete</a>
+                        </p>
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
