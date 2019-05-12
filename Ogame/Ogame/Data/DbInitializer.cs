@@ -53,7 +53,19 @@ namespace Ogame.Data
             var planets = new Planet[]
             {
                 new Planet { Name="Solaris", Cristal=50000, Deuterium=10000, Dist_to_star=10000, Metal=10000, Energy=100000, UserID=users[0].Id, X=0, Y=0 },
-                new Planet { Name="Tetra", Cristal=20000, Deuterium=500, Dist_to_star=5000, Metal=20000, Energy=120000, UserID=users[1].Id, X=-20, Y=20 },
+                PlanetRandomizer.GetRandomPlanet(20, -20),
+                PlanetRandomizer.GetRandomPlanet(40, -40),
+                PlanetRandomizer.GetRandomPlanet(60, -60),
+                PlanetRandomizer.GetRandomPlanet(-60, 60),
+                PlanetRandomizer.GetRandomPlanet(-60, -60),
+                PlanetRandomizer.GetRandomPlanet(60, 60),
+                PlanetRandomizer.GetRandomPlanet(-20, 20),
+                PlanetRandomizer.GetRandomPlanet(-20, -20),
+                PlanetRandomizer.GetRandomPlanet(20, 20),
+                PlanetRandomizer.GetRandomPlanet(-40, 40),
+                PlanetRandomizer.GetRandomPlanet(-40, -40),
+                PlanetRandomizer.GetRandomPlanet(40, 40),
+
             };
             foreach (var planet in planets)
             {

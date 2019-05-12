@@ -145,13 +145,18 @@ namespace Ogame.Data
             "zaz", "zez", "ziz", "zoz", "zuz"
         };
 
-        public static async Task<Planet> GetRandomPlanet(ApplicationDbContext context, int X, int Y)
+        public static async Task<Planet> GetExistingOrRandomPlanet(ApplicationDbContext context, int X, int Y)
         {
-            var planet = await context.Planets.FirstOrDefaultAsync(p => p.X == X && p.Y == Y);
+            var planet = context != null ?  await context.Planets.FirstOrDefaultAsync(p => p.X == X && p.Y == Y) : null;
             if (planet != null)
             {
                 return planet;
             }
+            return GetRandomPlanet(X, Y);
+        }
+
+        public static Planet GetRandomPlanet(int X, int Y)
+        {
             Random random = new Random(primeNumber1 + X * primeNumber2 + Y * primeNumber3);
             int distToStar = random.Next(50, 10001);
             int percentage = random.Next(101);
@@ -166,12 +171,13 @@ namespace Ogame.Data
                     {
                         name += '-' + random.Next(100).ToString();
                     }
-                } else
+                }
+                else
                 {
                     name += firstNamePart[random.Next(firstNamePart.Length)];
                 }
             }
-            planet = new Planet { X = X, Y = Y, Cristal = 1000, Energy = 1000, Dist_to_star = distToStar, Deuterium = 100, Metal = 1000, Name = name };
+            var planet = new Planet { X = X, Y = Y, Cristal = 1000, Energy = 1000, Dist_to_star = distToStar, Deuterium = 100, Metal = 1000, Name = name };
             return planet;
         }
     }
