@@ -15,6 +15,7 @@ namespace Ogame.Data
         {
             context.Database.EnsureCreated();
             if (context.Users.Any()) {
+                TemporalActionResolver.HandleTemoralActionForUserUntil(context, context.Users.First().Id);
                 return;
             }
 
@@ -75,9 +76,9 @@ namespace Ogame.Data
 
             var actions = new TemporalAction[]
             {
-                new TemporalAction { Due_to=DateTime.Now, Type=TemporalAction.ActionType.Production },
-                new TemporalAction { Due_to=DateTime.Now, Type=TemporalAction.ActionType.Upgrade },
-                new TemporalAction { Due_to=DateTime.Now, TargetID=1, Type=TemporalAction.ActionType.Attack },
+                new TemporalAction { Due_to=Convert.ToDateTime("2019-05-12 19:00"), Type=TemporalAction.ActionType.Production },
+                new TemporalAction { Due_to=Convert.ToDateTime("2019-05-12 20:00"), Type=TemporalAction.ActionType.Upgrade },
+                new TemporalAction { Due_to=Convert.ToDateTime("2019-05-12 21:00"), TargetID=1, Type=TemporalAction.ActionType.Attack },
             };
             foreach (var action in actions)
             {
@@ -124,6 +125,8 @@ namespace Ogame.Data
                 context.Defenses.Add(defense);
             }
             context.SaveChanges();
+
+            TemporalActionResolver.HandleTemoralActionForUserUntil(context, users[0].Id);
 
         }
     }

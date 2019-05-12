@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Ogame.Models
 {
-    public class Mine
+    public class Mine : IActionHolder
     {
         public enum Ressources
         {

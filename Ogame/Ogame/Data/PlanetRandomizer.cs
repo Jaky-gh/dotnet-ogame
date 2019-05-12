@@ -147,7 +147,7 @@ namespace Ogame.Data
 
         public static async Task<Planet> GetExistingOrRandomPlanet(ApplicationDbContext context, int X, int Y)
         {
-            var planet = context != null ?  await context.Planets.FirstOrDefaultAsync(p => p.X == X && p.Y == Y) : null;
+            var planet = context != null ?  await context.Planets.Include( m => m.Defenses).FirstOrDefaultAsync(p => p.X == X && p.Y == Y) : null;
             if (planet != null)
             {
                 return planet;
