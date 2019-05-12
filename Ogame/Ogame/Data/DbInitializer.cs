@@ -19,17 +19,17 @@ namespace Ogame.Data
             }
 
             var users = new User[] {
-                new User {UserName = "admin", Score=99999999, Email="test.admin@epita.fr'=", IsAdmin=true},
-                new User {UserName = "user1", Score=99999999, Email="test.user1@epita.fr'=", IsAdmin=false},
-                new User {UserName = "user2", Score=99999999, Email="test.user2@epita.fr'=", IsAdmin=false},
-                new User {UserName = "user3", Score=99999999, Email="test.user3@epita.fr'=", IsAdmin=false},
-                new User {UserName = "user4", Score=99999999, Email="test.user4@epita.fr'=", IsAdmin=false},
-                new User {UserName = "user5", Score=99999999, Email="test.user5@epita.fr'=", IsAdmin=false},
-                new User {UserName = "user6", Score=99999999, Email="test.user6@epita.fr'=", IsAdmin=false},
-                new User {UserName = "user7", Score=99999999, Email="test.user7@epita.fr'=", IsAdmin=false},
-                new User {UserName = "user8", Score=99999999, Email="test.user8@epita.fr'=", IsAdmin=false},
-                new User {UserName = "user9", Score=99999999, Email="test.user9@epita.fr'=", IsAdmin=false},
-                new User {UserName = "user10", Score=99999999, Email="test.user10@epita.fr'=", IsAdmin=false},
+                new User {UserName="admin", Score=99999999, Email="test.admin@epita.fr'=", IsAdmin=true},
+                new User {UserName="user1", Score=99999999, Email="test.user1@epita.fr'=", IsAdmin=false},
+                new User {UserName="user2", Score=99999999, Email="test.user2@epita.fr'=", IsAdmin=false},
+                new User {UserName="user3", Score=99999999, Email="test.user3@epita.fr'=", IsAdmin=false},
+                new User {UserName="user4", Score=99999999, Email="test.user4@epita.fr'=", IsAdmin=false},
+                new User {UserName="user5", Score=99999999, Email="test.user5@epita.fr'=", IsAdmin=false},
+                new User {UserName="user6", Score=99999999, Email="test.user6@epita.fr'=", IsAdmin=false},
+                new User {UserName="user7", Score=99999999, Email="test.user7@epita.fr'=", IsAdmin=false},
+                new User {UserName="user8", Score=99999999, Email="test.user8@epita.fr'=", IsAdmin=false},
+                new User {UserName="user9", Score=99999999, Email="test.user9@epita.fr'=", IsAdmin=false},
+                new User {UserName="user10", Score=99999999, Email="test.user10@epita.fr'=", IsAdmin=false},
             };
             foreach (var user in users)
             {

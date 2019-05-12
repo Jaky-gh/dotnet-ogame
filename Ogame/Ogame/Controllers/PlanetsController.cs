@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Ogame.Data;
 using Ogame.Models;
+using System.Security.Claims;
 
 namespace Ogame.Controllers
 {
@@ -15,17 +17,31 @@ namespace Ogame.Controllers
     public class PlanetsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public PlanetsController(ApplicationDbContext context)
+        public PlanetsController(ApplicationDbContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Planets
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Planets.Include(p => p.User);
-            return View(await applicationDbContext.ToListAsync());
+
+            User user = await GetCurrentUserAsync();
+            if (!_context.Planets.Any(e => e.UserID == user.Id))
+            {
+                Planet planet = new Planet {
+                    Name = "Solaris", Cristal = 15000, Deuterium = 5000, Dist_to_star = 7000, Metal = 15000, Energy = 100000, UserID = user.Id, X = 15, Y = 15
+                    // FIXME - Randomize name, and set better values
+                };
+                await Create(planet);
+            }
+
+            //return View(await GetCurrentUserAsync());
+            return View(new Models.PlanetView.PlanetViewInterface(await applicationDbContext.ToListAsync(), await GetCurrentUserAsync()));
         }
 
         // GET: Planets/Details/5
@@ -135,9 +151,11 @@ namespace Ogame.Controllers
             var planet = await _context.Planets
                 .Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.PlanetID == id);
-            if (planet == null)
+
+            User user = await GetCurrentUserAsync();
+            if (planet == null || planet.UserID != user.Id)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Index));
             }
 
             return View(planet);
@@ -157,6 +175,11 @@ namespace Ogame.Controllers
         private bool PlanetExists(int id)
         {
             return _context.Planets.Any(e => e.PlanetID == id);
+        }
+        
+        private async Task<User> GetCurrentUserAsync()
+        {
+            return await _userManager.FindByIdAsync(_userManager.GetUserId(User));
         }
     }
 }

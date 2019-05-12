@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Ogame.Models.Planet>
+﻿@model Ogame.Models.PlanetView.PlanetViewInterface
 
 @{
     ViewData["Title"] = "Index";
@@ -13,40 +13,40 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.User)
+                @Html.DisplayNameFor(model => model._planet[0].User)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model._planet[0].Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Dist_to_star)
+                @Html.DisplayNameFor(model => model._planet[0].Dist_to_star)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.X)
+                @Html.DisplayNameFor(model => model._planet[0].X)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Y)
+                @Html.DisplayNameFor(model => model._planet[0].Y)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Metal)
+                @Html.DisplayNameFor(model => model._planet[0].Metal)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Cristal)
+                @Html.DisplayNameFor(model => model._planet[0].Cristal)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Deuterium)
+                @Html.DisplayNameFor(model => model._planet[0].Deuterium)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Energy)
+                @Html.DisplayNameFor(model => model._planet[0].Energy)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model._planet) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.User.Id)
+                @Html.DisplayFor(modelItem => item.User.UserName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
@@ -73,9 +73,11 @@
                 @Html.DisplayFor(modelItem => item.Energy)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.PlanetID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.PlanetID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.PlanetID">Delete</a>
+                <a asp-action="Details" asp-route-id="@item.PlanetID">Details</a>
+                @if (Model._user.IsAdmin)
+                {
+                    <p><a asp-action="Edit" asp-route-id="@item.PlanetID">Edit</a> | <a asp-action="Delete" asp-route-id="@item.PlanetID">Delete</a></p>
+                }
             </td>
         </tr>
 }
