@@ -6,9 +6,12 @@
 
 <h2>Index</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+@if (Model._user.IsAdmin)
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+}
 <table class="table">
     <thead>
         <tr>
@@ -43,43 +46,44 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model._planet) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.UserName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Dist_to_star)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.X)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Y)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Metal)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cristal)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Deuterium)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Energy)
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.PlanetID">Details</a>
-                @if (Model._user.IsAdmin)
-                {
-                    <p><a asp-action="Edit" asp-route-id="@item.PlanetID">Edit</a> | <a asp-action="Delete" asp-route-id="@item.PlanetID">Delete</a></p>
-                }
-            </td>
-        </tr>
-}
+        @foreach (var item in Model._planet)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Dist_to_star)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.X)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Y)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Metal)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cristal)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Deuterium)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Energy)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.PlanetID">Details</a>
+                    @if (Model._user.IsAdmin)
+                    {
+                        <p><a asp-action="Edit" asp-route-id="@item.PlanetID">Edit</a> | <a asp-action="Delete" asp-route-id="@item.PlanetID">Delete</a></p>
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
