@@ -30,7 +30,7 @@ namespace Ogame.Controllers
         {
             var applicationDbContext = _context.Planets.Include(p => p.User);
 
-            User user = await _userManager.FindByIdAsync(_userManager.GetUserId(User));
+            User user = await GetCurrentUserAsync();
             if (!_context.Planets.Any(e => e.UserID == user.Id))
             {
                 Planet planet = new Planet {
@@ -40,7 +40,8 @@ namespace Ogame.Controllers
                 await Create(planet);
             }
 
-            return View(await applicationDbContext.ToListAsync());
+            //return View(await GetCurrentUserAsync());
+            return View(new Models.PlanetView.PlanetViewInterface(await applicationDbContext.ToListAsync(), await GetCurrentUserAsync()));
         }
 
         // GET: Planets/Details/5
@@ -150,9 +151,11 @@ namespace Ogame.Controllers
             var planet = await _context.Planets
                 .Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.PlanetID == id);
-            if (planet == null)
+
+            User user = await GetCurrentUserAsync();
+            if (planet == null || planet.UserID != user.Id)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Index));
             }
 
             return View(planet);
@@ -172,6 +175,11 @@ namespace Ogame.Controllers
         private bool PlanetExists(int id)
         {
             return _context.Planets.Any(e => e.PlanetID == id);
+        }
+        
+        private async Task<User> GetCurrentUserAsync()
+        {
+            return await _userManager.FindByIdAsync(_userManager.GetUserId(User));
         }
     }
 }
