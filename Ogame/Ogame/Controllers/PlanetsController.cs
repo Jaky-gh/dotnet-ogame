@@ -28,9 +28,9 @@ namespace Ogame.Controllers
         // GET: Planets
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Planets.Include(p => p.User);
-
             User user = await GetCurrentUserAsync();
+            var applicationDbContext = user.IsAdmin ? _context.Planets.Include(p => p.User) : _context.Planets.Where(p => p.UserID == user.Id);
+
             if (!_context.Planets.Any(e => e.UserID == user.Id))
             {
                 Planet planet = new Planet {
@@ -40,8 +40,7 @@ namespace Ogame.Controllers
                 await Create(planet);
             }
 
-            //return View(await GetCurrentUserAsync());
-            return View(new Models.PlanetView.PlanetViewInterface(await applicationDbContext.ToListAsync(), await GetCurrentUserAsync()));
+            return View(new Models.PlanetView.PlanetIndexViewInterface(await applicationDbContext.ToListAsync(), user));
         }
 
         // GET: Planets/Details/5
@@ -51,6 +50,8 @@ namespace Ogame.Controllers
             {
                 return NotFound();
             }
+            
+            var applicationDbContext = _context.Planets.Include(p => p.User);
 
             var planet = await _context.Planets
                 .Include(p => p.User)
@@ -60,12 +61,18 @@ namespace Ogame.Controllers
                 return NotFound();
             }
 
-            return View(planet);
+            return View(new Models.PlanetView.PlanetDetailsViewInterface(planet, await GetCurrentUserAsync()));
         }
 
         // GET: Planets/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            User user = await GetCurrentUserAsync();
+            if (!user.IsAdmin)
+            {
+                return NotFound();
+            }
+
             ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
@@ -77,6 +84,12 @@ namespace Ogame.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PlanetID,UserID,Name,Dist_to_star,X,Y,Metal,Cristal,Deuterium,Energy")] Planet planet)
         {
+            User user = await GetCurrentUserAsync();
+            if (!user.IsAdmin)
+            {
+                return NotFound();
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(planet);
@@ -91,6 +104,12 @@ namespace Ogame.Controllers
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
+            {
+                return NotFound();
+            }
+
+            User user = await GetCurrentUserAsync();
+            if (!user.IsAdmin)
             {
                 return NotFound();
             }
@@ -112,6 +131,12 @@ namespace Ogame.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("PlanetID,UserID,Name,Dist_to_star,X,Y,Metal,Cristal,Deuterium,Energy")] Planet planet)
         {
             if (id != planet.PlanetID)
+            {
+                return NotFound();
+            }
+
+            User user = await GetCurrentUserAsync();
+            if (!user.IsAdmin)
             {
                 return NotFound();
             }
@@ -148,14 +173,19 @@ namespace Ogame.Controllers
                 return NotFound();
             }
 
+            User user = await GetCurrentUserAsync();
+            if (!user.IsAdmin)
+            {
+                return NotFound();
+            }
+
             var planet = await _context.Planets
                 .Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.PlanetID == id);
 
-            User user = await GetCurrentUserAsync();
-            if (planet == null || planet.UserID != user.Id)
+            if (planet == null)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
 
             return View(planet);
@@ -166,6 +196,12 @@ namespace Ogame.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            User user = await GetCurrentUserAsync();
+            if (!user.IsAdmin)
+            {
+                return NotFound();
+            }
+
             var planet = await _context.Planets.FindAsync(id);
             _context.Planets.Remove(planet);
             await _context.SaveChangesAsync();

@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace Ogame.Models.PlanetView
 {
-    public class PlanetViewInterface
+    public class PlanetIndexViewInterface
     {
         public List<Planet> _planet { get; set; }
         public User _user { get; set; }
 
-        public PlanetViewInterface(List<Planet> planet, User user)
+        public PlanetIndexViewInterface(List<Planet> planet, User user)
         {
             _planet = planet;
             _user = user;
