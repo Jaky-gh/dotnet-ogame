@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,7 @@ using Ogame.Models;
 
 namespace Ogame.Controllers
 {
+    [Authorize]
     public class DefensesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -50,8 +52,8 @@ namespace Ogame.Controllers
         // GET: Defenses/Create
         public IActionResult Create()
         {
-            ViewData["ActionID"] = new SelectList(_context.Actions, "TemporalActionID", "TemporalActionID");
-            ViewData["CapsID"] = new SelectList(_context.Caps, "CapsID", "CapsID");
+            ViewData["ActionID"] = new SelectList(_context.Actions, "PlanetID", "PlanetID");
+            ViewData["CapsID"] = new SelectList(_context.Caps, "PlanetID", "PlanetID");
             ViewData["PlanetID"] = new SelectList(_context.Planets, "PlanetID", "PlanetID");
             return View();
         }
@@ -61,7 +63,7 @@ namespace Ogame.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DefenseID,PlanetID,Level,Energy,CapsID,ActionID")] Defense defense)
+        public async Task<IActionResult> Create([Bind("PlanetID,PlanetID,Level,Energy,CapsID,ActionID")] Defense defense)
         {
             if (ModelState.IsValid)
             {
@@ -69,8 +71,8 @@ namespace Ogame.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ActionID"] = new SelectList(_context.Actions, "TemporalActionID", "TemporalActionID", defense.ActionID);
-            ViewData["CapsID"] = new SelectList(_context.Caps, "CapsID", "CapsID", defense.CapsID);
+            ViewData["ActionID"] = new SelectList(_context.Actions, "PlanetID", "PlanetID", defense.ActionID);
+            ViewData["CapsID"] = new SelectList(_context.Caps, "PlanetID", "PlanetID", defense.CapsID);
             ViewData["PlanetID"] = new SelectList(_context.Planets, "PlanetID", "PlanetID", defense.PlanetID);
             return View(defense);
         }
@@ -88,8 +90,8 @@ namespace Ogame.Controllers
             {
                 return NotFound();
             }
-            ViewData["ActionID"] = new SelectList(_context.Actions, "TemporalActionID", "TemporalActionID", defense.ActionID);
-            ViewData["CapsID"] = new SelectList(_context.Caps, "CapsID", "CapsID", defense.CapsID);
+            ViewData["ActionID"] = new SelectList(_context.Actions, "PlanetID", "PlanetID", defense.ActionID);
+            ViewData["CapsID"] = new SelectList(_context.Caps, "PlanetID", "PlanetID", defense.CapsID);
             ViewData["PlanetID"] = new SelectList(_context.Planets, "PlanetID", "PlanetID", defense.PlanetID);
             return View(defense);
         }
@@ -99,7 +101,7 @@ namespace Ogame.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DefenseID,PlanetID,Level,Energy,CapsID,ActionID")] Defense defense)
+        public async Task<IActionResult> Edit(int id, [Bind("PlanetID,PlanetID,Level,Energy,CapsID,ActionID")] Defense defense)
         {
             if (id != defense.DefenseID)
             {
@@ -126,8 +128,8 @@ namespace Ogame.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ActionID"] = new SelectList(_context.Actions, "TemporalActionID", "TemporalActionID", defense.ActionID);
-            ViewData["CapsID"] = new SelectList(_context.Caps, "CapsID", "CapsID", defense.CapsID);
+            ViewData["ActionID"] = new SelectList(_context.Actions, "PlanetID", "PlanetID", defense.ActionID);
+            ViewData["CapsID"] = new SelectList(_context.Caps, "PlanetID", "PlanetID", defense.CapsID);
             ViewData["PlanetID"] = new SelectList(_context.Planets, "PlanetID", "PlanetID", defense.PlanetID);
             return View(defense);
         }
