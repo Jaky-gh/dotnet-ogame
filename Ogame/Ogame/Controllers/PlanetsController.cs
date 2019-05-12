@@ -28,9 +28,9 @@ namespace Ogame.Controllers
         // GET: Planets
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Planets.Include(p => p.User);
-
             User user = await GetCurrentUserAsync();
+            var applicationDbContext = user.IsAdmin ? _context.Planets.Include(p => p.User) : _context.Planets.Where(p => p.UserID == user.Id);
+
             if (!_context.Planets.Any(e => e.UserID == user.Id))
             {
                 Planet planet = new Planet {
@@ -40,8 +40,7 @@ namespace Ogame.Controllers
                 await Create(planet);
             }
 
-            //return View(await GetCurrentUserAsync());
-            return View(new Models.PlanetView.PlanetViewInterface(await applicationDbContext.ToListAsync(), await GetCurrentUserAsync()));
+            return View(new Models.PlanetView.PlanetIndexViewInterface(await applicationDbContext.ToListAsync(), user));
         }
 
         // GET: Planets/Details/5
@@ -51,6 +50,8 @@ namespace Ogame.Controllers
             {
                 return NotFound();
             }
+            
+            var applicationDbContext = _context.Planets.Include(p => p.User);
 
             var planet = await _context.Planets
                 .Include(p => p.User)
@@ -60,7 +61,7 @@ namespace Ogame.Controllers
                 return NotFound();
             }
 
-            return View(planet);
+            return View(new Models.PlanetView.PlanetDetailsViewInterface(planet, await GetCurrentUserAsync()));
         }
 
         // GET: Planets/Create

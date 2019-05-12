@@ -1,4 +1,4 @@
-﻿@model Ogame.Models.Planet
+﻿@model Ogame.Models.PlanetView.PlanetDetailsViewInterface
 
 @{
     ViewData["Title"] = "Details";
@@ -11,62 +11,68 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.User)
+            @Html.DisplayNameFor(model => model._planet.User)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.User.Id)
+            @Html.DisplayFor(model => model._planet.User.Id)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model._planet.Name)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model._planet.Name)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Dist_to_star)
+            @Html.DisplayNameFor(model => model._planet.Dist_to_star)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Dist_to_star)
+            @Html.DisplayFor(model => model._planet.Dist_to_star)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.X)
+            @Html.DisplayNameFor(model => model._planet.X)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.X)
+            @Html.DisplayFor(model => model._planet.X)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Y)
+            @Html.DisplayNameFor(model => model._planet.Y)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Y)
+            @Html.DisplayFor(model => model._planet.Y)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Metal)
+            @Html.DisplayNameFor(model => model._planet.Metal)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Metal)
+            @Html.DisplayFor(model => model._planet.Metal)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Cristal)
+            @Html.DisplayNameFor(model => model._planet.Cristal)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Cristal)
+            @Html.DisplayFor(model => model._planet.Cristal)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Deuterium)
+            @Html.DisplayNameFor(model => model._planet.Deuterium)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Deuterium)
+            @Html.DisplayFor(model => model._planet.Deuterium)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Energy)
+            @Html.DisplayNameFor(model => model._planet.Energy)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Energy)
+            @Html.DisplayFor(model => model._planet.Energy)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.PlanetID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @if (Model._user.IsAdmin)
+    {
+        <p><a asp-action="Edit" asp-route-id="@Model._planet.PlanetID">Edit</a> | <a asp-action="Index">Back to List</a></p>
+    }
+    else
+    {
+        <p><a asp-action="Index">Back to List</a></p>
+    }
 </div>
