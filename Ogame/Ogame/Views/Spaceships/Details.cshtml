@@ -1,4 +1,4 @@
-﻿@model Ogame.Models.Spaceship
+﻿@model Ogame.Models.SpaceshipView.SpaceshipDetailsViewInterface
 
 @{
     ViewData["Title"] = "Details";
@@ -11,38 +11,46 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Planet)
+            @Html.DisplayNameFor(model => model._spaceship.Planet)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Planet.PlanetID)
+            @Html.DisplayFor(model => model._spaceship.Planet.PlanetID)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Level)
+            @Html.DisplayNameFor(model => model._spaceship.Level)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Level)
+            @Html.DisplayFor(model => model._spaceship.Level)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Energy)
+            @Html.DisplayNameFor(model => model._spaceship.Energy)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Energy)
+            @Html.DisplayFor(model => model._spaceship.Energy)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Caps)
+            @Html.DisplayNameFor(model => model._spaceship.Caps)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Caps.CapsID)
+            @Html.DisplayFor(model => model._spaceship.Caps.CapsID)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Action)
+            @Html.DisplayNameFor(model => model._spaceship.Action)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Action.TemporalActionID)
+            @Html.DisplayFor(model => model._spaceship.Action.TemporalActionID)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.SpaceshipID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @if (Model._user.IsAdmin)
+    {
+        <p>
+            <a asp-action="Edit" asp-route-id="@Model._spaceship.SpaceshipID">Edit</a> | <a asp-action="Index">Back to List</a>
+        </p>
+    }
+    else
+    {
+        <p><a asp-action="Index">Back to List</a></p>
+    }
 </div>
