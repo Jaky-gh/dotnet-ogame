@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,17 +16,24 @@ namespace Ogame.Controllers
     public class SpaceshipsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public SpaceshipsController(ApplicationDbContext context)
+        public SpaceshipsController(ApplicationDbContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Spaceships
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Spaceships.Include(s => s.Action).Include(s => s.Caps).Include(s => s.Planet);
-            return View(await applicationDbContext.ToListAsync());
+            User user = await GetCurrentUserAsync();
+            var applicationDbContext = user.IsAdmin ?
+                _context.Spaceships.Include(s => s.Action).Include(s => s.Caps).Include(s => s.Planet).Include(s => s.Planet.User) :
+                _context.Spaceships.Where(p => p.Planet.UserID == user.Id).Include(s => s.Action).Include(s => s.Caps).Include(s => s.Planet).Include(s => s.Planet.User)
+                ;
+
+            return View(new Models.SpaceshipView.SpaceshipIndexViewInterface(await applicationDbContext.ToListAsync(), user));
         }
 
         // GET: Spaceships/Details/5
@@ -41,7 +49,9 @@ namespace Ogame.Controllers
                 .Include(s => s.Caps)
                 .Include(s => s.Planet)
                 .FirstOrDefaultAsync(m => m.SpaceshipID == id);
-            if (spaceship == null)
+
+            User user = await GetCurrentUserAsync();
+            if (spaceship == null || (!user.IsAdmin && spaceship.Planet.UserID != user.Id))
             {
                 return NotFound();
             }
@@ -50,8 +60,14 @@ namespace Ogame.Controllers
         }
 
         // GET: Spaceships/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            User user = await GetCurrentUserAsync();
+            if (!user.IsAdmin)
+            {
+                return NotFound();
+            }
+
             ViewData["ActionID"] = new SelectList(_context.Actions, "TemporalActionID", "TemporalActionID");
             ViewData["CapsID"] = new SelectList(_context.Caps, "CapsID", "CapsID");
             ViewData["PlanetID"] = new SelectList(_context.Planets, "PlanetID", "PlanetID");
@@ -65,6 +81,12 @@ namespace Ogame.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("SpaceshipID,PlanetID,CapsID,ActionID,Level,Energy")] Spaceship spaceship)
         {
+            User user = await GetCurrentUserAsync();
+            if (!user.IsAdmin)
+            {
+                return NotFound();
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(spaceship);
@@ -80,6 +102,12 @@ namespace Ogame.Controllers
         // GET: Spaceships/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            User user = await GetCurrentUserAsync();
+            if (!user.IsAdmin)
+            {
+                return NotFound();
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -103,6 +131,12 @@ namespace Ogame.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("SpaceshipID,PlanetID,CapsID,ActionID,Level,Energy")] Spaceship spaceship)
         {
+            User user = await GetCurrentUserAsync();
+            if (!user.IsAdmin)
+            {
+                return NotFound();
+            }
+
             if (id != spaceship.SpaceshipID)
             {
                 return NotFound();
@@ -137,6 +171,12 @@ namespace Ogame.Controllers
         // GET: Spaceships/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            User user = await GetCurrentUserAsync();
+            if (!user.IsAdmin)
+            {
+                return NotFound();
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -160,6 +200,12 @@ namespace Ogame.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            User user = await GetCurrentUserAsync();
+            if (!user.IsAdmin)
+            {
+                return NotFound();
+            }
+
             var spaceship = await _context.Spaceships.FindAsync(id);
             _context.Spaceships.Remove(spaceship);
             await _context.SaveChangesAsync();
@@ -169,6 +215,11 @@ namespace Ogame.Controllers
         private bool SpaceshipExists(int id)
         {
             return _context.Spaceships.Any(e => e.SpaceshipID == id);
+        }
+
+        private async Task<User> GetCurrentUserAsync()
+        {
+            return await _userManager.FindByIdAsync(_userManager.GetUserId(User));
         }
     }
 }

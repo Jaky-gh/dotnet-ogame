@@ -29,7 +29,7 @@ namespace Ogame.Controllers
         public async Task<IActionResult> Index()
         {
             User user = await GetCurrentUserAsync();
-            var applicationDbContext = user.IsAdmin ? _context.Planets.Include(p => p.User) : _context.Planets.Where(p => p.UserID == user.Id);
+            var applicationDbContext = user.IsAdmin ? _context.Planets.Include(p => p.User) : _context.Planets.Where(p => p.UserID == user.Id).Include(p => p.User);
 
             if (!_context.Planets.Any(e => e.UserID == user.Id))
             {
