@@ -28,7 +28,9 @@ namespace Ogame.Controllers
         // GET: Planets
         public async Task<IActionResult> Index()
         {
+
             User user = await GetCurrentUserAsync();
+            TemporalActionResolver.HandleTemoralActionForUserUntil(_context, user.Id);
             var applicationDbContext = user.IsAdmin ? _context.Planets.Include(p => p.User) : _context.Planets.Where(p => p.UserID == user.Id).Include(p => p.User);
 
             if (!_context.Planets.Any(e => e.UserID == user.Id))
@@ -58,6 +60,8 @@ namespace Ogame.Controllers
             }
             
             var applicationDbContext = _context.Planets.Include(p => p.User);
+            string userid = _userManager.GetUserId(User);
+            TemporalActionResolver.HandleTemoralActionForUserUntil(_context, userid);
 
             var planet = await _context.Planets
                 .Include(p => p.User)

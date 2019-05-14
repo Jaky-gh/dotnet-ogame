@@ -28,6 +28,7 @@ namespace Ogame.Controllers
         public async Task<IActionResult> Index()
         {
             User user = await GetCurrentUserAsync();
+            TemporalActionResolver.HandleTemoralActionForUserUntil(_context, user.Id);
             var applicationDbContext = user.IsAdmin ?
                 _context.Spaceships.Include(s => s.Action).Include(s => s.Caps).Include(s => s.Planet).Include(s => s.Planet.User) :
                 _context.Spaceships.Where(p => p.Planet.UserID == user.Id).Include(s => s.Action).Include(s => s.Caps).Include(s => s.Planet).Include(s => s.Planet.User)
@@ -39,6 +40,11 @@ namespace Ogame.Controllers
         // GET: Spaceships/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            string userId = _userManager.GetUserId(User);
+            if (userId != null)
+            {
+                TemporalActionResolver.HandleTemoralActionForUserUntil(_context, userId);
+            }
             if (id == null)
             {
                 return NotFound();
