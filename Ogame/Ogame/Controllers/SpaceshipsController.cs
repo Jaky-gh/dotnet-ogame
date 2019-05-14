@@ -56,7 +56,7 @@ namespace Ogame.Controllers
                 return NotFound();
             }
 
-            return View(spaceship);
+            return View(new Models.SpaceshipView.SpaceshipDetailsViewInterface(spaceship, user));
         }
 
         // GET: Spaceships/Create
