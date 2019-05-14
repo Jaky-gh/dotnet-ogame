@@ -147,7 +147,7 @@ namespace Ogame.Data
 
         public static async Task<Planet> GetExistingOrRandomPlanet(ApplicationDbContext context, int X, int Y)
         {
-            var planet = context != null ?  await context.Planets.Include( m => m.Defenses).FirstOrDefaultAsync(p => p.X == X && p.Y == Y) : null;
+            var planet = context != null ?  await context.Planets.Include(m => m.User).Include( m => m.Defenses).FirstOrDefaultAsync(p => p.X == X && p.Y == Y) : null;
             if (planet != null)
             {
                 return planet;
@@ -178,6 +178,55 @@ namespace Ogame.Data
                 }
             }
             var planet = new Planet { X = X, Y = Y, Cristal = 1000, Energy = 1000, Dist_to_star = distToStar, Deuterium = 100, Metal = 1000, Name = name };
+            return planet;
+        }
+
+        public async static Task<Planet> FindPlanetForNewPlayer(ApplicationDbContext context)
+        {
+            // We count the number of planet already existing to try to find an inoccupied position
+            int numPlanet = await context.Planets.CountAsync();
+            Planet planet = null;
+            while (planet == null || planet.UserID != null)
+            {
+                // We computed a position from the number of planet
+                int dist = 20 * (numPlanet / 4);
+                int X = 0;
+                int Y = 0;
+                switch (numPlanet % 8)
+                {
+                    case 0:
+                        X = dist;
+                        break;
+                    case 1:
+                        Y = dist;
+                        break;
+                    case 2:
+                        X = -dist;
+                        break;
+                    case 3:
+                        Y = -dist;
+                        break;
+                    case 4:
+                        X = dist;
+                        Y = dist;
+                        break;
+                    case 5:
+                        X = dist;
+                        Y = -dist;
+                        break;
+                    case 6:
+                        X = -dist;
+                        Y = dist;
+                        break;
+                    case 7:
+                        X = -dist;
+                        Y = -dist;
+                        break;
+                }
+                planet = await GetExistingOrRandomPlanet(context, X, Y);
+                // If the planet was already user by a player we will consider that there is one more planet to compute new position
+                numPlanet++;
+            }
             return planet;
         }
     }

@@ -33,11 +33,17 @@ namespace Ogame.Controllers
 
             if (!_context.Planets.Any(e => e.UserID == user.Id))
             {
-                Planet planet = new Planet {
-                    Name = "Solaris", Cristal = 15000, Deuterium = 5000, Dist_to_star = 7000, Metal = 15000, Energy = 100000, UserID = user.Id, X = 15, Y = 15
-                    // FIXME - Randomize name, and set better values
-                };
-                await Create(planet);
+                Planet planet = await PlanetRandomizer.FindPlanetForNewPlayer(_context);
+                planet.User = user;
+                if (planet.PlanetID != 0)
+                {
+                    _context.Planets.Update(planet);
+                }
+                else
+                {
+                    _context.Planets.Add(planet);
+                }
+                await _context.SaveChangesAsync();
             }
 
             return View(new Models.PlanetView.PlanetIndexViewInterface(await applicationDbContext.ToListAsync(), user));
