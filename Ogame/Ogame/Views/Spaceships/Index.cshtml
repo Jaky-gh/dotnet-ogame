@@ -59,7 +59,19 @@
                     @Html.DisplayFor(modelItem => item.Action.Type)
                 </td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.SpaceshipID">Details</a>
+                    @if (item.Action.Type != TemporalAction.ActionType.Attack && item.Action.Type != TemporalAction.ActionType.Upgrade)
+                    {
+                        <p>
+                            <a asp-action="Attack" asp-route-id="@item.SpaceshipID">Attack</a> |
+                            <a asp-action="Details" asp-route-id="@item.SpaceshipID">Details</a>
+                        </p>
+                    }
+                    else
+                    {
+                        <p>
+                            <a asp-action="Details" asp-route-id="@item.SpaceshipID">Details</a>
+                        </p>
+                    }
                     @if (Model._user.IsAdmin)
                     {
                         <p>

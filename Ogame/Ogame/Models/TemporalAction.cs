@@ -8,7 +8,7 @@ namespace Ogame.Models
     public class TemporalAction
     {
         public enum ActionType {
-            Production, Upgrade, Attack
+            Production=1, Upgrade=2, Attack=4
         }
 
         public int TemporalActionID { get; set; }
