@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var hideNavBar = Convert.ToBoolean(ViewData["hideNavBar"]);
+    var hideFooter = Convert.ToBoolean(ViewData["hideFooter"]);
+}
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -17,38 +22,43 @@
     </environment>
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Ogame</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Planets" asp-action="Index">Planet</a></li>
-                    <li><a asp-area="" asp-controller="SpaceShips" asp-action="Index">Vessels</a></li>
-                    <li><a asp-area="" asp-controller="TemporalActions" asp-action="Index">Actions</a></li>
-                </ul>
-                <partial name="_LoginPartial" />
-            </div>
-        </div>
-    </nav>
+    @if (!hideNavBar)
+    {
+      <nav class="navbar navbar-inverse navbar-fixed-top">
+          <div class="container">
+              <div class="navbar-header">
+                  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                      <span class="sr-only">Toggle navigation</span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                  </button>
+                  <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Ogame</a>
+              </div>
+              <div class="navbar-collapse collapse">
+                  <ul class="nav navbar-nav">
+                      <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                      <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+                      <li><a asp-area="" asp-controller="Planets" asp-action="Index">Planet</a></li>
+                      <li><a asp-area="" asp-controller="SpaceShips" asp-action="Index">Vessels</a></li>
+                      <li><a asp-area="" asp-controller="TemporalActions" asp-action="Index">Actions</a></li>
+                  </ul>
+                  <partial name="_LoginPartial" />
+              </div>
+          </div>
+      </nav>
+    }
 
     <partial name="_CookieConsentPartial" />
 
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; 2019 - Ogame - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></p>
-        </footer>
+        @if (!hideFooter) {
+          <hr />
+          <footer>
+              <p>&copy; 2019 - Ogame - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></p>
+          </footer>
+        }
     </div>
 
     <environment include="Development">

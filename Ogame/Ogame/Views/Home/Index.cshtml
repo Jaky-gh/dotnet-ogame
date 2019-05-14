@@ -1,16 +1,66 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
+    ViewData["hideNavBar"] = true;
+    ViewData["hideFooter"] = true;
 }
 
-<div class="jumbotron">
-    <h1>Ogame</h1>
+<div class="home-container">
+  <div class="row text-center">
+     <span class="home-title">Welcome to OGame</span>
+          <p class="home-description">
+              Ogame is a game where you manage your interstellar
+              Empire. Trying to expand your territory and conquer the universe
+          </p>
+      <button type="button" onclick="location.href='@Url.Action("Index", "Dashboard")'" class="home-button btn btn-secondary btn-lg">Enter the Universe</button>
+  </div>
 </div>
-<div class="row">
-    <div class="col-md-4">
-        <h2>Welcome to Ogame</h2>
-        <p>
-            Ogame is a game where you manage your interstellar
-            Empire. Trying to expand your territory and conquer the universe
-        </p>
-    </div>
-</div>
+
+<style>
+html, body {
+  height: 100%;
+  padding: 0;
+}
+
+body {
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.1)), url(/images/home_bg.jpg);
+}
+
+.container {
+  height: 100%;
+}
+
+.home-container {
+  color: white;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.home-title {
+  font-size: 60px;
+  text-align: center;
+}
+
+.home-description {
+  text-align: center;
+  max-width: 900px;
+  font-weight: 100;
+  font-size: 25px;
+}
+
+.home-button {
+  color: white;
+  background-color: black;
+  padding: 10px 60px;
+  margin-top: 40px;
+  font-variant: small-caps;
+  transition: all 1s cubic-bezier(0,-0.34, 0, 0.97);
+}
+
+.home-button:hover {
+  padding: 10px 100px;
+  color: white;
+  transition: all 1s ease;
+}
+</style>
