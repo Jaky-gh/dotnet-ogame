@@ -11,7 +11,7 @@ namespace Ogame.Data
     {
         private static readonly float defenseDamageMult = 100;
         private static readonly TimeSpan ProductionCycle = new TimeSpan(0, 0, 5, 0);
-        
+
 
         private static int IActionHolderSort(IActionHolder a1, IActionHolder a2)
         {
@@ -26,9 +26,9 @@ namespace Ogame.Data
             return 0;
         }
 
-        public static void resolveAction(ApplicationDbContext context, IActionHolder actionHolder, DateTime until)
+        public static void ResolveAction(ApplicationDbContext context, IActionHolder actionHolder, DateTime until)
         {
-            switch(actionHolder.Action.Type)
+            switch (actionHolder.Action.Type)
             {
                 case TemporalAction.ActionType.Attack:
                     HandleTemoralActionForUserUntil(context, actionHolder.Action.Target.UserID, actionHolder.Action.Due_to);
@@ -46,12 +46,13 @@ namespace Ogame.Data
                         }
                     }
                     if ((actionHolder as Spaceship).Energy > 0)
-                    { 
-                        if( actionHolder.Action.Target.UserID == null)
+                    {
+                        if (actionHolder.Action.Target.UserID == null)
                         {
                             actionHolder.Action.Target.UserID = actionHolder.Planet.UserID;
                             context.Planets.Update(actionHolder.Action.Target);
-                        } else
+                        }
+                        else
                         {
                             float stealCristal = actionHolder.Action.Target.Cristal / 2;
                             actionHolder.Action.Target.Cristal -= stealCristal;
@@ -82,16 +83,17 @@ namespace Ogame.Data
                 if (numCycle > 0)
                 {
                     float produce = numCycle * actionHolder.Level * actionHolder.Caps.Growth_factor;
-                    if(actionHolder is Mine)
+                    if (actionHolder is Mine)
                     {
                         produce *= ((Mine)actionHolder).Collect_rate;
-                        switch(((Mine)actionHolder).Ressource)
+                        switch (((Mine)actionHolder).Ressource)
                         {
                             case Mine.Ressources.Cristal:
                                 if (((Mine)actionHolder).Planet.Cristal + produce > ((Mine)actionHolder).Caps.Cristal_cap * ((Mine)actionHolder).Level * ((Mine)actionHolder).Caps.Growth_factor)
                                 {
                                     ((Mine)actionHolder).Planet.Cristal = ((Mine)actionHolder).Caps.Cristal_cap;
-                                } else
+                                }
+                                else
                                 {
                                     ((Mine)actionHolder).Planet.Cristal += produce;
                                 }
@@ -124,7 +126,8 @@ namespace Ogame.Data
                         if (((SolarPanel)actionHolder).Planet.Energy + produce > ((SolarPanel)actionHolder).Caps.Energy_cap)
                         {
                             ((SolarPanel)actionHolder).Planet.Energy = ((SolarPanel)actionHolder).Caps.Energy_cap * ((SolarPanel)actionHolder).Level * ((SolarPanel)actionHolder).Caps.Growth_factor;
-                        } else
+                        }
+                        else
                         {
                             ((SolarPanel)actionHolder).Planet.Energy += produce;
                         }
@@ -135,13 +138,17 @@ namespace Ogame.Data
                     context.Planets.Update(actionHolder.Planet);
                 }
             }
-            else {
-                context.Actions.Remove(actionHolder.Action);
+            else
+            {
+                actionHolder.Action.Type = TemporalAction.ActionType.Idle;
+                actionHolder.Action.Due_to = until.Add(ProductionCycle);
+                actionHolder.Action.TargetID = null;
+                actionHolder.Action.Target = null;
             }
             context.SaveChanges();
         }
 
-        public static void HandleTemoralActionForUserUntil(ApplicationDbContext context, string userId, DateTime? now = null )
+        public static void HandleTemoralActionForUserUntil(ApplicationDbContext context, string userId, DateTime? now = null)
         {
             if (now == null)
                 now = DateTime.Now;
@@ -206,34 +213,36 @@ namespace Ogame.Data
 
             int indA = 0;
             int indE = 0;
-            while(indA < alliedAction.Length && indE < ennemyVessels.Length)
+            while (indA < alliedAction.Length && indE < ennemyVessels.Length)
             {
                 if (alliedAction[indA].Action.Due_to < ennemyVessels[indE].Action.Due_to)
                 {
-                    resolveAction(context, alliedAction[indA], ennemyVessels[indE].Action.Due_to);
+                    ResolveAction(context, alliedAction[indA], ennemyVessels[indE].Action.Due_to);
                     if (alliedAction[indA].Action != null && alliedAction[indA].Action.Due_to > ennemyVessels[indE].Action.Due_to)
                     {
                         Array.Sort(alliedAction, IActionHolderSort);
                     }
-                    else {
+                    else
+                    {
                         indA++;
                     }
-                } else
+                }
+                else
                 {
                     HandleTemoralActionForUserUntil(context, ennemyVessels[indE].Planet.UserID, ennemyVessels[indE].Action.Due_to);
-                    resolveAction(context, ennemyVessels[indE], now.Value);
+                    ResolveAction(context, ennemyVessels[indE], now.Value);
                     indE++;
                 }
             }
             while (indA < alliedAction.Length)
             {
-                resolveAction(context, alliedAction[indA], now.Value);
+                ResolveAction(context, alliedAction[indA], now.Value);
                 indA++;
             }
             while (indE < ennemyVessels.Length)
             {
                 HandleTemoralActionForUserUntil(context, ennemyVessels[indE].Planet.UserID, ennemyVessels[indE].Action.Due_to);
-                resolveAction(context, ennemyVessels[indE], now.Value);
+                ResolveAction(context, ennemyVessels[indE], now.Value);
                 indE++;
             }
 

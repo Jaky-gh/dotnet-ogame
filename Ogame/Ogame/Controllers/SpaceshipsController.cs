@@ -17,6 +17,7 @@ namespace Ogame.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<User> _userManager;
+        private readonly static TimeSpan _travelTimeUnit = new TimeSpan(0, 1, 0);
 
         public SpaceshipsController(ApplicationDbContext context, UserManager<User> userManager)
         {
@@ -244,6 +245,7 @@ namespace Ogame.Controllers
             Spaceship spaceship = _context.Spaceships
                 .Include(s => s.Action)
                 .Include(s => s.Action.Target)
+                .Include(s => s.Planet)
                 .FirstOrDefault(s => s.SpaceshipID == id);
             if (spaceship == null)
             {
@@ -260,10 +262,9 @@ namespace Ogame.Controllers
                     if (planet.PlanetID == 0)
                     {
                         _context.Add(planet);
-                        _context.SaveChanges();
                     }
 
-                    temporalAction.Due_to = DateTime.Now;
+                    temporalAction.Due_to = DateTime.Now.Add(_travelTimeUnit * (Math.Abs(planet.X - spaceship.Planet.X) + Math.Abs(planet.Y - spaceship.Planet.Y))); //FIXME
                     temporalAction.Type = TemporalAction.ActionType.Attack;
                     temporalAction.TargetID = (await PlanetRandomizer.GetExistingOrRandomPlanet(_context, spaceshipAttackInterface._X, spaceshipAttackInterface._Y)).PlanetID;
 
