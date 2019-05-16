@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Ogame.Models;
 using Ogame.Data;
 
@@ -27,32 +22,8 @@ namespace Ogame.Controllers
             string id = _userManager.GetUserId(User);
             if (id != null)
             {
-                TemporalActionResolver.HandleTemoralActionForUserUntil(_context, id);
+                return Redirect("Dashboard");
             }
-            return View();
-        }
-
-        public IActionResult About()
-        {
-            string id = _userManager.GetUserId(User);
-            if (id != null)
-            {
-                TemporalActionResolver.HandleTemoralActionForUserUntil(_context, id);
-            }
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            string id = _userManager.GetUserId(User);
-            if (id != null)
-            {
-                TemporalActionResolver.HandleTemoralActionForUserUntil(_context, id);
-            }
-            ViewData["Message"] = "Your contact page.";
-
             return View();
         }
 
