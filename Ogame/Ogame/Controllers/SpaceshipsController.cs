@@ -17,6 +17,7 @@ namespace Ogame.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<User> _userManager;
+        private readonly static TimeSpan _travelTimeUnit = new TimeSpan(0, 1, 0);
 
         public SpaceshipsController(ApplicationDbContext context, UserManager<User> userManager)
         {
@@ -28,6 +29,7 @@ namespace Ogame.Controllers
         public async Task<IActionResult> Index()
         {
             User user = await GetCurrentUserAsync();
+            TemporalActionResolver.HandleTemoralActionForUserUntil(_context, user.Id);
             var applicationDbContext = user.IsAdmin ?
                 _context.Spaceships.Include(s => s.Action).Include(s => s.Caps).Include(s => s.Planet).Include(s => s.Planet.User) :
                 _context.Spaceships.Where(p => p.Planet.UserID == user.Id).Include(s => s.Action).Include(s => s.Caps).Include(s => s.Planet).Include(s => s.Planet.User)
@@ -39,6 +41,11 @@ namespace Ogame.Controllers
         // GET: Spaceships/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            string userId = _userManager.GetUserId(User);
+            if (userId != null)
+            {
+                TemporalActionResolver.HandleTemoralActionForUserUntil(_context, userId);
+            }
             if (id == null)
             {
                 return NotFound();
@@ -210,6 +217,77 @@ namespace Ogame.Controllers
             _context.Spaceships.Remove(spaceship);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Spaceships/Attack/5
+        public async Task<IActionResult> Attack(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var spaceship = await _context.Spaceships.FindAsync(id);
+            if (spaceship == null)
+            {
+                return NotFound();
+            }
+            return View(new Models.SpaceshipView.SpaceshipAttackInterface());
+        }
+
+        // POST: Spaceships/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Attack(int id, [Bind("_X,_Y")] Models.SpaceshipView.SpaceshipAttackInterface spaceshipAttackInterface)
+        {
+            Spaceship spaceship = _context.Spaceships
+                .Include(s => s.Action)
+                .Include(s => s.Action.Target)
+                .Include(s => s.Planet)
+                .FirstOrDefault(s => s.SpaceshipID == id);
+            if (spaceship == null)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    TemporalAction temporalAction = spaceship.Action;
+                    Planet planet = await PlanetRandomizer.GetExistingOrRandomPlanet(_context, spaceshipAttackInterface._X, spaceshipAttackInterface._Y);
+
+                    if (planet.PlanetID == 0)
+                    {
+                        _context.Add(planet);
+                    }
+
+                    temporalAction.Due_to = DateTime.Now.Add(_travelTimeUnit * (Math.Abs(planet.X - spaceship.Planet.X) + Math.Abs(planet.Y - spaceship.Planet.Y))); //FIXME
+                    temporalAction.Type = TemporalAction.ActionType.Attack;
+                    temporalAction.TargetID = (await PlanetRandomizer.GetExistingOrRandomPlanet(_context, spaceshipAttackInterface._X, spaceshipAttackInterface._Y)).PlanetID;
+
+                    _context.Update(temporalAction);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!SpaceshipExists(spaceship.SpaceshipID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["ActionID"] = new SelectList(_context.Actions, "TemporalActionID", "TemporalActionID", spaceship.ActionID);
+            ViewData["CapsID"] = new SelectList(_context.Caps, "CapsID", "CapsID", spaceship.CapsID);
+            ViewData["PlanetID"] = new SelectList(_context.Planets, "PlanetID", "PlanetID", spaceship.PlanetID);
+            return View(spaceship);
         }
 
         private bool SpaceshipExists(int id)

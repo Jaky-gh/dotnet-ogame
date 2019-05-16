@@ -28,16 +28,24 @@ namespace Ogame.Controllers
         // GET: Planets
         public async Task<IActionResult> Index()
         {
+
             User user = await GetCurrentUserAsync();
+            TemporalActionResolver.HandleTemoralActionForUserUntil(_context, user.Id);
             var applicationDbContext = user.IsAdmin ? _context.Planets.Include(p => p.User) : _context.Planets.Where(p => p.UserID == user.Id).Include(p => p.User);
 
             if (!_context.Planets.Any(e => e.UserID == user.Id))
             {
-                Planet planet = new Planet {
-                    Name = "Solaris", Cristal = 15000, Deuterium = 5000, Dist_to_star = 7000, Metal = 15000, Energy = 100000, UserID = user.Id, X = 15, Y = 15
-                    // FIXME - Randomize name, and set better values
-                };
-                await Create(planet);
+                Planet planet = await PlanetRandomizer.FindPlanetForNewPlayer(_context);
+                planet.User = user;
+                if (planet.PlanetID != 0)
+                {
+                    _context.Planets.Update(planet);
+                }
+                else
+                {
+                    _context.Planets.Add(planet);
+                }
+                await _context.SaveChangesAsync();
             }
 
             return View(new Models.PlanetView.PlanetIndexViewInterface(await applicationDbContext.ToListAsync(), user));
@@ -52,6 +60,8 @@ namespace Ogame.Controllers
             }
             
             var applicationDbContext = _context.Planets.Include(p => p.User);
+            string userid = _userManager.GetUserId(User);
+            TemporalActionResolver.HandleTemoralActionForUserUntil(_context, userid);
 
             var planet = await _context.Planets
                 .Include(p => p.User)

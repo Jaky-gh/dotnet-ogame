@@ -1,13 +1,13 @@
-################################ NEED ###################################
+## NEED
  - dotnet
- - docker (for mac and linux)
-################################ Config #################################
+ - docker
+## Config
 
 in Ogame/Ogame/appsettings.json
 - comment or uncomment the line if you want to use localdb on windows without docker
 
 
-################################ Launch server ##########################
+## Launch server
 
 docker-compose up --build
 
