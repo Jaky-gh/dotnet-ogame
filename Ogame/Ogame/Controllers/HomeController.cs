@@ -22,7 +22,7 @@ namespace Ogame.Controllers
             string id = _userManager.GetUserId(User);
             if (id != null)
             {
-                return Redirect("Dashboard");
+                return RedirectToAction("Index", "Dashboard");
             }
             return View();
         }

@@ -28,6 +28,14 @@
     <Content Remove="Views\Dashboard.cshtml" />
     <Content Remove="wwwroot\images\icons8-planète-sur-le-côté-obscur-64.png" />
     <Content Remove="wwwroot\images\planet-icon.png" />
+    <Content Remove="wwwroot\images\icons8-chariot-de-mine-64.png" />
+    <Content Remove="wwwroot\images\mine-icon.png" />
+    <Content Remove="wwwroot\images\icons8-panneau-solaire-filled-50.png" />
+    <Content Remove="wwwroot\images\icons8-fusée-filled-50.png" />
+    <Content Remove="wwwroot\images\icons8-bouclier-chevalier-50.png" />
+    <Content Remove="wwwroot\images\solar-panel-icon.png" />
+    <Content Remove="wwwroot\images\spaceship-icon.png" />
+    <Content Remove="wwwroot\images\defense-icon.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="Views\Spaceships\Attack.cshtml">

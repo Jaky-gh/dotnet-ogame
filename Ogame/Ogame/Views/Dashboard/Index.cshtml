@@ -16,6 +16,12 @@
             <div class="planet-container" onclick="location.href='@Url.Action("Details", "Planets", new { id = planet.PlanetID })'">
                 <img class="planet-icon" src="/images/planet-icon.png" />
                 <span class="planet-name">@planet.Name</span>
+                <div class="row planet-resources">
+                    <span class="col planet-resources-item"><b>Cristal:</b> @planet.Cristal</span>
+                    <span class="col planet-resources-item"><b>Metal:</b> @planet.Metal</span>
+                    <span class="col planet-resources-item"><b>Deut:</b> @planet.Deuterium</span>
+                    <span class="col planet-resources-item"><b>Energy:</b> @planet.Energy</span>
+                </div>
             </div>
         </div>
     }
@@ -24,7 +30,7 @@
 <style>
     .planet-container {
         background: linear-gradient(45deg,#e25d5e, #d7addeb0);
-        padding: 40px 0;
+        padding: 45px 0;
         text-align: center;
         border-radius: 15px;
         box-shadow: #000000 0px 0px 6px -1px;
@@ -46,5 +52,19 @@
         font-weight: bold;
         font-size: 30px;
         font-variant: small-caps;
+    }
+
+    .planet-resources {
+        position: absolute;
+        bottom: 25px;
+        left: 0;
+        right: 0;
+        font-variant: small-caps;
+    }
+
+    .planet-resources-item {
+        background-color: #292929;
+        padding: 2px 4px;
+        border-radius: 6px;
     }
 </style>
