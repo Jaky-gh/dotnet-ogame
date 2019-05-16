@@ -1,6 +1,6 @@
 ## NEED
  - dotnet
- - docker (for mac and linux)
+ - docker
 ## Config
 
 in Ogame/Ogame/appsettings.json
