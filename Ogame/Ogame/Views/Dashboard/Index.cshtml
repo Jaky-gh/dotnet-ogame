@@ -1,5 +1,50 @@
 ﻿@{
     ViewData["Title"] = "Dashboard";
+    var user = ViewData["user"] as User;
 }
 
-<h2>DashBoard</h2>
+<h2>Planets</h2>
+
+
+<div class="row">
+
+    @foreach (var planet in ViewData["planets"] as List<Planet>)
+    {
+
+        //add random gradient according to x/z
+        <div class="col-md-4">
+            <div class="planet-container" onclick="location.href='@Url.Action("Details", "Planets", new { id = planet.PlanetID })'">
+                <img class="planet-icon" src="/images/planet-icon.png" />
+                <span class="planet-name">@planet.Name</span>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .planet-container {
+        background: linear-gradient(45deg,#e25d5e, #d7addeb0);
+        padding: 40px 0;
+        text-align: center;
+        border-radius: 15px;
+        box-shadow: #000000 0px 0px 6px -1px;
+        transition: all 300ms ease;
+        margin-bottom: 20px;
+    }
+
+    .planet-container:hover {
+        cursor: pointer;
+        transition: all 300ms ease;
+        background-color: black;
+        opacity: 0.75;
+    }
+
+    .planet-name {
+        margin-left: 20px;
+        vertical-align: middle;
+        color: white;
+        font-weight: bold;
+        font-size: 30px;
+        font-variant: small-caps;
+    }
+</style>

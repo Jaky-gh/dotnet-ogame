@@ -26,6 +26,8 @@
 
   <ItemGroup>
     <Content Remove="Views\Dashboard.cshtml" />
+    <Content Remove="wwwroot\images\icons8-planète-sur-le-côté-obscur-64.png" />
+    <Content Remove="wwwroot\images\planet-icon.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="Views\Spaceships\Attack.cshtml">
