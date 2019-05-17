@@ -61,7 +61,6 @@ namespace Ogame.Controllers
             {
                 return NotFound();
             }
-
             return View(new Models.SpaceshipView.SpaceshipDetailsViewInterface(spaceship, user));
         }
 
@@ -226,11 +225,30 @@ namespace Ogame.Controllers
                 return NotFound();
             }
 
-            var spaceship = await _context.Spaceships.FindAsync(id);
+            var spaceship = await _context.Spaceships
+               .Include(s => s.Action)
+               .Include(s => s.Caps)
+               .Include(s => s.Planet)
+               .FirstOrDefaultAsync(m => m.SpaceshipID == id);
             if (spaceship == null)
             {
                 return NotFound();
             }
+
+            Random rnd = new Random();
+
+            var dist = rnd.Next(1, (int) (spaceship.Energy / 10) + 1);
+            dist *= rnd.Next(0, 2) == 1 ? 1 : -1;
+            var tmpDist = rnd.Next(dist < 0 ? dist : 0, dist < 0 ? 0 : dist);
+            var x = spaceship.Planet.X + tmpDist;
+            var y = spaceship.Planet.Y + (dist - tmpDist);
+
+            ViewData["planet"] = await PlanetRandomizer.GetExistingOrRandomPlanet(_context, x, y);
+            ViewData["user"] = await GetCurrentUserAsync();
+            ViewData["spaceshipPlanetId"] = spaceship.PlanetID;
+            ViewData["distance"] = Math.Abs(dist) * 4.2;
+            ViewData["timeCost"] = ActionCost.AttackCost(spaceship, x, y).ActionTime.TotalMinutes;
+
             return View(new Models.SpaceshipView.SpaceshipAttackInterface());
         }
 
@@ -244,6 +262,8 @@ namespace Ogame.Controllers
             Spaceship spaceship = _context.Spaceships
                 .Include(s => s.Action)
                 .Include(s => s.Action.Target)
+                .Include(s => s.Planet)
+                .Include(s => s.Caps)
                 .FirstOrDefault(s => s.SpaceshipID == id);
             if (spaceship == null)
             {
@@ -264,12 +284,9 @@ namespace Ogame.Controllers
                     }
                     throw;
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", "Planets", new { id = spaceship.PlanetID });
             }
-            ViewData["ActionID"] = new SelectList(_context.Actions, "TemporalActionID", "TemporalActionID", spaceship.ActionID);
-            ViewData["CapsID"] = new SelectList(_context.Caps, "CapsID", "CapsID", spaceship.CapsID);
-            ViewData["PlanetID"] = new SelectList(_context.Planets, "PlanetID", "PlanetID", spaceship.PlanetID);
-            return View(new Models.SpaceshipView.SpaceshipAttackInterface());
+            return RedirectToAction("Attack", "Spaceships", new { id = spaceship.SpaceshipID });
         }
 
         private bool SpaceshipExists(int id)

@@ -2,36 +2,140 @@
 
 @{
     ViewData["Title"] = "Attack";
+    var user = ViewData["user"] as User;
+    var planet = ViewData["planet"] as Planet;
 }
 
-<h2>Attack</h2>
+<a asp-controller="Planets" asp-action="Details" asp-route-id="@ViewData["spaceshipPlanetId"]" class="back-button">
+    <img class="back-icon" src="/images/back-icon.png" />
+    Back to Planet
+</a>
 
-<h4>Spaceship</h4>
-<hr />
+<h2>Attack on Random planet:</h2>
+
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Attack">
-            <div class="form-group">
-                <label asp-for="_X" class="control-label"></label>
-                <input asp-for="_X" class="form-control" />
-                <span asp-validation-for="_X" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="_Y" class="control-label"></label>
-                <input asp-for="_Y" class="form-control" />
-                <span asp-validation-for="_Y" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </form>
+    <div class="col-md-5 planet-container">
+        <img class="planet-icon" src="/images/planet-icon.png" />
+        <span class="planet-name">@planet.Name</span>
+        <div class="row">
+            <span class="col description">Distance: @ViewData["distance"] AL | Duration: @ViewData["timeCost"] minutes</span>
+        </div>
+        <div class="row" style="margin: 20px 0;">
+            @if (planet.UserID != null)
+            {
+                <span class="col planet-control">Planet is owned by @planet.User.Email</span>
+            }
+            else
+            {
+                <span class="col planet-control">Planet is unexplored</span>
+            }
+        </div>
+        <div class="row" style="text-align: center;">
+            <a class="col-md-5 refresh-planet" asp-action="Attack">Find Another Planet</a>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<form asp-action="Attack" style="text-align: center;">
+    <input type="hidden" value="@planet.X" asp-for="_X"/>
+    <input type="hidden" value="@planet.Y" asp-for="_Y"/>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    <input type="submit" value="Attack" class="attack-button" />
+</form>
+
+<style>
+    .body-content {
+        padding-top: 20px;
+    }
+
+    .back-button {
+        color: black;
+        background-color: white;
+        padding: 10px 8px;
+        border-radius: 10px;
+        font-size: 20px;
+        font-weight: 100;
+        transition: all 100ms ease;
+    }
+
+        .back-button:hover {
+            transition: all 100ms ease;
+            color: black;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+    .back-icon {
+        height: 50px;
+    }
+
+    .planet-container {
+        background: linear-gradient(45deg,#e25d5e, #d7addeb0);
+        padding: 45px 0;
+        text-align: center;
+        border-radius: 15px;
+        box-shadow: #000000 0px 0px 6px -1px;
+        transition: all 300ms ease;
+        float: none;
+        margin: 0 auto 20px auto;
+    }
+
+    .planet-name {
+        margin-left: 20px;
+        vertical-align: middle;
+        color: white;
+        font-weight: bold;
+        font-size: 30px;
+        font-variant: small-caps;
+    }
+
+    .refresh-planet {
+        float: none;
+        font-variant: small-caps;
+        padding: 5px 20px;
+        background-color: white;
+        border-radius: 10px;
+        color: black;
+        font-size: 20px;
+        font-weight: 600;
+        box-shadow: black 0px 0px 5px 0px;
+        transition: all 200ms ease;
+        margin-top: 10px;
+    }
+
+    .refresh-planet:hover {
+        transition: all 200ms ease;
+        background-color: black;
+        color: white;
+        text-decoration: none;
+    }
+
+    .attack-button {
+        margin-top: 10px;
+    }
+
+    input[type=submit] {
+        font-variant: small-caps;
+        padding: 5px 20px;
+        background-color: white;
+        border-radius: 10px;
+        color: black;
+        font-size: 30px;
+        font-weight: 600;
+        box-shadow: black 0px 0px 5px 0px;
+    }
+
+    input[type=submit]:hover {
+        transition: all 200ms ease;
+        background-color: black;
+        color: white;
+        text-decoration: none;
+    }
+
+    .planet-control {
+        background-color: #292929;
+        padding: 2px 4px;
+        border-radius: 6px;
+        font-size: 18px;
+    }
+</style>

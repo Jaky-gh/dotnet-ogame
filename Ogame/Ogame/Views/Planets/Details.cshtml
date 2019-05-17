@@ -2,63 +2,94 @@
 
 @{
     ViewData["Title"] = "Planet <" + Model._planet.Name + ">";
-    var user = Model._user;
+    var user = ViewData["user"] as User;
 }
+
+<a asp-controller="Dashboard" asp-action="" class="back-button">
+    <img class="back-icon" src="/images/back-icon.png" />
+    Back to Planets
+</a>
 
 <div class="planet-container">
     <h2>
         @Html.DisplayFor(model => model._planet.Name)
     </h2>
+    <p class="dist-star">Star: @Math.Round((decimal)Model._planet.Dist_to_star, 1) millions km</p>
 
     <div class="row planet-resources">
-        <span class="col planet-resources-item"><b>Cristal:</b> @Html.DisplayFor(model => model._planet.Cristal)</span>
-        <span class="col planet-resources-item"><b>Metal:</b> @Html.DisplayFor(model => model._planet.Metal)</span>
-        <span class="col planet-resources-item"><b>Deut:</b> @Html.DisplayFor(model => model._planet.Deuterium)</span>
-        <span class="col planet-resources-item"><b>Energy:</b> @Html.DisplayFor(model => model._planet.Energy)</span>
+        <span class="col planet-resources-item"><b>Cristal:</b> @Math.Round(Model._planet.Cristal)</span>
+        <span class="col planet-resources-item"><b>Metal:</b> @Math.Round(Model._planet.Metal)</span>
+        <span class="col planet-resources-item"><b>Deut:</b> @Math.Round(Model._planet.Deuterium)</span>
+        <span class="col planet-resources-item"><b>Energy:</b> @Math.Round(Model._planet.Energy)</span>
     </div>
 </div>
 
 <h3>Mines</h3>
 <div class="row">
-    <div class="col-md-3 padding-add-new">
-        <div class="entity-container bg-add-new" onclick="location.href='@Url.Action("Create", "Mine")'">
-            <img class="entity-icon" src="/images/mine-icon.png" />
-            <span class="entity-name">Add New</span>
-        </div>
-    </div>
     @foreach (var mine in ViewData["mines"] as List<Mine>)
     {
-        <div class="col-md-3">
-            <div class="entity-container" onclick="location.href='@Url.Action("Details", "Mine", new { id = mine.MineID })'">
+        <div class="col-md-4">
+            <div class="entity-container">
                 <img class="entity-icon" src="/images/mine-icon.png" />
                 <span class="entity-name">@mine.Ressource</span>
                 <div class="row entity-properties">
-                    <span class="entity-property">@mine.CollectRate/s</span>
+                    <span class="entity-property">@Math.Round(mine.CollectRate) per 5 min</span>
                     <span class="entity-property">Level @mine.Level</span>
                 </div>
+                <div class="row entity-status-container">
+                    <span class="entity-status">@mine.Action.Type</span>
+                    @if (mine.Action.Type == TemporalAction.ActionType.Upgrade)
+                    {
+                        var timeLeft = mine.Action.Due_to - DateTime.Now;
+
+                        <span class="entity-status">@timeLeft.Minutes min @timeLeft.Seconds sec</span>
+
+                    }
+                </div> 
+                @{
+                    var actionCost = Ogame.Data.ActionCost.UpgradeMineCost(mine);
+                    var canUpgrade = Ogame.Data.ActionCost.CanUpgrade(actionCost, Model._planet);
+                }
+                @if (canUpgrade)
+                {
+                    <a class="upgrade-button" asp-controller="Planets" asp-action="UpgradeMine" asp-route-id="@mine.MineID"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
+                }
             </div>
         </div>
     }
 </div>
 
-<h3>Defenses</h3>
+<h3>Defense</h3>
 <div class="row">
-    <div class="col-md-3 padding-add-new">
-        <div class="entity-container bg-add-new" onclick="location.href='@Url.Action("Create", "Defenses")'">
-            <img class="entity-icon" src="/images/defense-icon.png" />
-            <span class="entity-name">Add New</span>
-        </div>
-    </div>
     @foreach (var defense in ViewData["defenses"] as List<Defense>)
     {
-        <div class="col-md-3">
-            <div class="entity-container bg-blue" onclick="location.href='@Url.Action("Details", "Defenses", new { id = defense.DefenseID })'">
+        <div class="col-md-4">
+            <div class="entity-container bg-blue">
                 <img class="entity-icon" src="/images/defense-icon.png" />
-                <span class="entity-name">Defense D-@defense.DefenseID</span>
+                <span class="entity-name">Defense</span>
                 <div class="row entity-properties">
-                    <span class="entity-property">@defense.Energy energy</span>
+                    <span class="entity-property">Energy: @Math.Round(defense.Energy)</span>
                     <span class="entity-property">Level @defense.Level</span>
                 </div>
+                <div class="row entity-status-container">
+                    <span class="entity-status">@defense.Action.Type</span>
+                    @if (defense.Action.Type == TemporalAction.ActionType.Upgrade)
+                    {
+                        var timeLeft = defense.Action.Due_to - DateTime.Now;
+
+                        <span class="entity-status">@timeLeft.Minutes min @timeLeft.Seconds sec</span>
+
+                    }
+                </div>
+                @{
+        var actionCost = Ogame.Data.ActionCost.UpgradeDefenseActionCost(defense);
+        var canUpgrade = Ogame.Data.ActionCost.CanUpgrade(actionCost, Model._planet);
+                }
+                @if (canUpgrade)
+    {
+            <a class="upgrade-button" asp-controller="Planets" asp-action="UpgradeDefense" asp-route-id="@defense.DefenseID"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
+}
+
             </div>
         </div>
     }
@@ -66,51 +97,123 @@
 
 <h3>Spaceships</h3>
 <div class="row">
-    <div class="col-md-3 padding-add-new">
-        <div class="entity-container bg-add-new" onclick="location.href='@Url.Action("Create", "Spaceships")'">
-            <img class="entity-icon" src="/images/spaceship-icon.png" />
-            <span class="entity-name">Add New</span>
+    @{
+        var actioncost = Ogame.Data.ActionCost.createSpaceshipCost();
+        var canAddSpaceship = Ogame.Data.ActionCost.CanCreateSpaceship(actioncost, Model._planet);
+    }
+
+    @if (canAddSpaceship)
+    {
+        <div class="col-md-2 padding-add-new">
+            <div class="entity-container entity-container-hover" onclick="location.href='@Url.Action("CreateSpaceship", "Planets", new { id = Model._planet.PlanetID })'">
+                <span class="entity-name no-margin">Add New</span>
+            </div>
         </div>
-    </div>
+    }
+
     @foreach (var spaceship in ViewData["spaceships"] as List<Spaceship>)
     {
-        <div class="col-md-3">
-            <div class="entity-container bg-orange" onclick="location.href='@Url.Action("Details", "Spaceships", new { id = spaceship.SpaceshipID })'">
+        <div class="col-md-4">
+            <div class="entity-container bg-orange">
                 <img class="entity-icon" src="/images/spaceship-icon.png" />
                 <span class="entity-name">Spaceship S-@spaceship.SpaceshipID</span>
                 <div class="row entity-properties">
-                    <span class="entity-property">@spaceship.Energy energy</span>
+                    <span class="entity-property">Energy: @Math.Round(spaceship.Energy)</span>
                     <span class="entity-property">Level @spaceship.Level</span>
                 </div>
+                <div class="row entity-status-container">
+                    <span class="entity-status">@spaceship.Action.Type</span>
+                    @if (spaceship.Action.Type == TemporalAction.ActionType.Attack || spaceship.Action.Type == TemporalAction.ActionType.Upgrade)
+                    {
+                        var timeLeft = spaceship.Action.Due_to - DateTime.Now;
+
+                        <span class="entity-status">@timeLeft.Minutes min @timeLeft.Seconds sec</span>
+
+                    }
+                </div>
+                @{
+                    var actionCost = Ogame.Data.ActionCost.UpgradeSpaceshipActionCost(spaceship);
+                    var canUpgrade = Ogame.Data.ActionCost.CanUpgrade(actionCost, Model._planet);
+                    var canAttack = false;
+                    if (spaceship.Level > 0) {
+                        actionCost = Ogame.Data.ActionCost.AttackCost(spaceship, Model._planet.X + (int) spaceship.Energy/10, Model._planet.Y);
+                        canAttack = Ogame.Data.ActionCost.CanAttack(actionCost, spaceship);
+                    }
+                }
+                @if (canUpgrade)
+                {
+                    <a class="upgrade-button" asp-controller="Planets" asp-action="UpgradeSpaceship" asp-route-id="@spaceship.SpaceshipID"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
+                }
+                @if (canAttack)
+                {
+                    <a class="fight-button" asp-controller="Spaceships" asp-action="Attack" asp-route-id="@spaceship.SpaceshipID"><img class="fight-icon" src="/images/fight-icon.png" /></a>
+                }
             </div>
         </div>
     }
 </div>
 
-<h3>Solar Panels</h3>
+<h3>Solar Panel</h3>
 <div class="row">
-    <div class="col-md-3 padding-add-new">
-        <div class="entity-container bg-add-new" onclick="location.href='@Url.Action("Create", "SolarPanels")'">
-            <img class="entity-icon" src="/images/solar-panel-icon.png" />
-            <span class="entity-name">Add New</span>
-        </div>
-    </div>
     @foreach (var solarpanel in ViewData["solarPanels"] as List<SolarPanel>)
     {
-        <div class="col-md-3">
-            <div class="entity-container bg-yellow" onclick="location.href='@Url.Action("Details", "SolarPanels", new { id = solarpanel.SolarPanelID })'">
+        <div class="col-md-4">
+            <div class="entity-container bg-yellow">
                 <img class="entity-icon" src="/images/solar-panel-icon.png" />
-                <span class="entity-name">Spaceship S-@solarpanel.SolarPanelID</span>
+                <span class="entity-name">Solar Panel</span>
                 <div class="row entity-properties">
-                    <span class="entity-property">@solarpanel.CollectRate/s</span>
+                    <span class="entity-property">@Math.Round(solarpanel.CollectRate) per 5 min</span>
                     <span class="entity-property">Level @solarpanel.Level</span>
                 </div>
+                <div class="row entity-status-container">
+                    <span class="entity-status">@solarpanel.Action.Type</span>
+                    @if (solarpanel.Action.Type == TemporalAction.ActionType.Upgrade)
+                    {
+                        var timeLeft = solarpanel.Action.Due_to - DateTime.Now;
+
+                        <span class="entity-status">@timeLeft.Minutes min @timeLeft.Seconds sec</span>
+
+                    }
+                </div>
+                @{
+                    var actionCost = Ogame.Data.ActionCost.UpgradeSolarPanelCost(solarpanel);
+                    var canUpgrade = Ogame.Data.ActionCost.CanUpgrade(actionCost, Model._planet);
+                }
+                @if (canUpgrade)
+                {
+                    <a class="upgrade-button" asp-controller="Planets" asp-action="UpgradeSolarPanel" asp-route-id="@solarpanel.SolarPanelID"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
+                }
             </div>
         </div>
     }
 </div>
 
 <style>
+    .body-content {
+        padding-top: 20px;
+    }
+
+    .back-button {
+        color: black;
+        background-color: white;
+        padding: 10px 8px;
+        border-radius: 10px;
+        font-size: 20px;
+        font-weight: 100;
+        transition: all 100ms ease;
+    }
+
+    .back-button:hover {
+        transition: all 100ms ease;
+        color: black;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    .back-icon {
+        height: 50px;
+    }
+
     .planet-container {
         background: linear-gradient(45deg,#e25d5e, #d7addeb0);
         padding: 45px 0;
@@ -119,7 +222,7 @@
         box-shadow: #000000 0px 0px 6px -1px;
         transition: all 300ms ease;
         margin-bottom: 20px;
-        margin-top: 20px;
+        margin-top: 10px;
         position: relative;
     }
 
@@ -137,6 +240,11 @@
         border-radius: 6px;
     }
 
+    .dist-star {
+        font-weight: 100;
+        font-size: 18px;
+    }
+
     .entity-container {
         background-color: white;
         color: black;
@@ -148,12 +256,12 @@
         margin-bottom: 10px;
     }
 
-        .entity-container:hover {
-            cursor: pointer;
-            transition: all 200ms ease;
-            background-color: #4e4d4d;
-            color: white;
-        }
+    .entity-container-hover:hover {
+        background-color: black;
+        color: white;
+        transition: all 200ms ease;
+        cursor: pointer;
+    }
 
     .entity-icon {
         height: 50px;
@@ -181,6 +289,65 @@
         border-radius: 6px;
     }
 
+    .entity-status-container {
+        position: absolute;
+        right: 0;
+        top: 5px;
+        left: 0;
+        color: black;
+    }
+
+    .entity-status {
+        background-color: white;
+        padding: 2px 20px;
+        border-radius: 6px;
+        box-shadow: black 0px 0px 2px 0px;
+    }
+
+
+
+    .upgrade-button {
+        position: absolute;
+        top: -5px;
+        right: 0;
+        z-index:10;
+        background-color: #f57979;
+        border-radius: 40px;
+        padding: 2px;
+        box-shadow: black 0px 0px 5px 0px;
+        transition: all 500ms ease;
+    }
+
+    .upgrade-button:hover {
+        transition: all 500ms ease;
+        border-radius: 10px;
+    }
+
+    .upgrade-icon {
+        height: 50px;
+    }
+
+    .fight-button {
+        position: absolute;
+        bottom: 10px;
+        z-index: 10;
+        right: 0;
+        background-color: white;
+        border-radius: 40px;
+        padding: 10px;
+        box-shadow: black 0px 0px 5px 0px;
+        transition: all 500ms ease;
+    }
+
+    .fight-button:hover {
+        transition: all 500ms ease;
+        border-radius: 10px;
+    }
+
+    .fight-icon {
+        height: 35px;
+    }
+
     .bg-blue {
         background-color: #83d1ef;
     }
@@ -195,5 +362,9 @@
 
     .padding-add-new {
         padding-right: 50px;
+    }
+
+    .no-margin {
+        margin: 0;
     }
 </style>

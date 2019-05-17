@@ -40,17 +40,18 @@ namespace Ogame.Controllers
                 if (planet.PlanetID != 0)
                 {
                     _context.Planets.Update(planet);
+                    
                 }
                 else
                 {
                     _context.Planets.Add(planet);
-                    DefaultElementsGenerator.CreateDefaultSpaceship(_context, planet);
-                    DefaultElementsGenerator.CreateDefaultMine(_context, Mine.Ressources.Metal, planet);
-                    DefaultElementsGenerator.CreateDefaultMine(_context, Mine.Ressources.Cristal, planet);
-                    DefaultElementsGenerator.CreateDefaultMine(_context, Mine.Ressources.Deuterium, planet);
-                    DefaultElementsGenerator.CreateDefaultSolarPanel(_context, planet);
-                    DefaultElementsGenerator.CreateDefaultDefense(_context, planet);
                 }
+                DefaultElementsGenerator.CreateDefaultSpaceship(_context, planet);
+                DefaultElementsGenerator.CreateDefaultMine(_context, Mine.Ressources.Metal, planet);
+                DefaultElementsGenerator.CreateDefaultMine(_context, Mine.Ressources.Cristal, planet);
+                DefaultElementsGenerator.CreateDefaultMine(_context, Mine.Ressources.Deuterium, planet);
+                DefaultElementsGenerator.CreateDefaultSolarPanel(_context, planet);
+                DefaultElementsGenerator.CreateDefaultDefense(_context, planet);
                 await _context.SaveChangesAsync();
             }
 
@@ -77,10 +78,24 @@ namespace Ogame.Controllers
                 return NotFound();
             }
 
-            ViewData["mines"] = await _context.Mines.Where(p => p.PlanetID == planet.PlanetID).ToListAsync();
-            ViewData["defenses"] = await _context.Defenses.Where(p => p.PlanetID == planet.PlanetID).ToListAsync();
-            ViewData["solarPanels"] = await _context.SolarPanels.Where(p => p.PlanetID == planet.PlanetID).ToListAsync();
-            ViewData["spaceships"] = await _context.Spaceships.Where(p => p.PlanetID == planet.PlanetID).ToListAsync();
+            ViewData["mines"] = await _context.Mines.Where(p => p.PlanetID == planet.PlanetID)
+                .Include(s => s.Caps)
+                .Include(s => s.Planet)
+                .Include(s => s.Action).ToListAsync();
+            ViewData["defenses"] = await _context.Defenses.Where(p => p.PlanetID == planet.PlanetID)
+                .Include(s => s.Caps)
+                .Include(s => s.Planet)
+                .Include(s => s.Action).ToListAsync();
+            ViewData["solarPanels"] = await _context.SolarPanels.Where(p => p.PlanetID == planet.PlanetID)
+                .Include(s => s.Caps)
+                .Include(s => s.Planet)
+                .Include(s => s.Action).ToListAsync();
+            ViewData["spaceships"] = await _context.Spaceships.Where(p => p.PlanetID == planet.PlanetID)
+                .Include(s => s.Caps)
+                .Include(s => s.Planet)
+                .Include(s => s.Action).ToListAsync();
+
+            ViewData["user"] = await GetCurrentUserAsync();
 
             return View(new Models.PlanetView.PlanetDetailsViewInterface(planet, await GetCurrentUserAsync()));
         }
@@ -245,6 +260,95 @@ namespace Ogame.Controllers
         private async Task<User> GetCurrentUserAsync()
         {
             return await _userManager.FindByIdAsync(_userManager.GetUserId(User));
+        }
+
+        public async Task<IActionResult> UpgradeMine(int? id)
+        {
+            var mine = await _context.Mines
+                .Include(s => s.Caps)
+                .Include(s => s.Planet)
+                .Include(s => s.Planet.User)
+                .Include(s => s.Action)
+                .FirstOrDefaultAsync(m => m.MineID == id);
+            if (mine == null)
+            {
+                return NotFound();
+            }
+
+            if (!ElementUpgrader.UpgradeMine(_context, mine))
+                Console.WriteLine("Mine Upgrade Failed");
+            return RedirectToAction("Details", new { id = mine.PlanetID });
+        }
+
+        public async Task<IActionResult> UpgradeDefense(int? id)
+        {
+            var defense = await _context.Defenses
+                .Include(s => s.Caps)
+                .Include(s => s.Planet)
+                .Include(s => s.Planet.User)
+                .Include(s => s.Action)
+                .FirstOrDefaultAsync(m => m.DefenseID == id);
+            if (defense == null)
+            {
+                return NotFound();
+            }
+
+            if (!ElementUpgrader.UpgradeDefense(_context, defense))
+                Console.WriteLine("D Upgrade Failed");
+            return RedirectToAction("Details", new { id = defense.PlanetID });
+        }
+
+        public async Task<IActionResult> UpgradeSolarPanel(int? id)
+        {
+            var solarpanel = await _context.SolarPanels
+                .Include(s => s.Caps)
+                .Include(s => s.Planet)
+                .Include(s => s.Planet.User)
+                .Include(s => s.Action)
+                .FirstOrDefaultAsync(m => m.SolarPanelID == id);
+            if (solarpanel == null)
+            {
+                return NotFound();
+            }
+
+            if (!ElementUpgrader.UpgradeSolarPanel(_context, solarpanel))
+                Console.WriteLine("SolarPanel Upgrade Failed");
+            return RedirectToAction("Details", new { id = solarpanel.PlanetID });
+        }
+
+        public async Task<IActionResult> UpgradeSpaceship(int? id)
+        {
+            var spaceship = await _context.Spaceships
+                .Include(s => s.Caps)
+                .Include(s => s.Planet)
+                .Include(s => s.Planet.User)
+                .Include(s => s.Action)
+                .FirstOrDefaultAsync(m => m.SpaceshipID == id);
+            if (spaceship == null)
+            {
+                return NotFound();
+            }
+
+            if (!ElementUpgrader.UpgradeSpaceship(_context, spaceship))
+                Console.WriteLine("Spaceship Upgrade Failed");
+            return RedirectToAction("Details", new { id = spaceship.PlanetID });
+        }
+
+        public async Task<IActionResult> CreateSpaceship(int? id)
+        {
+            var planet = await _context.Planets
+                .Include(s => s.Spaceships)
+                .Include(s => s.User)
+                .FirstOrDefaultAsync(p => p.PlanetID == id);
+            if (planet == null)
+            {
+                return NotFound();
+            }
+
+            if (!ElementUpgrader.addSpaceship(_context, planet))
+                Console.WriteLine("Spaceship creation failed");
+
+            return RedirectToAction("Details", new { id = planet.PlanetID });
         }
     }
 }
