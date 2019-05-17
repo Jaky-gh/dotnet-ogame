@@ -6,7 +6,7 @@ using Ogame.Models;
 
 namespace Ogame.Data
 {
-    public class DefaultElementsGenerator
+    public static class  DefaultElementsGenerator
     {
         public static Caps CreateDefaultCaps(ApplicationDbContext context)
         {
@@ -124,7 +124,7 @@ namespace Ogame.Data
                 Ressource = mineRessources,
                 Planet = planet,
                 PlanetID = planet.PlanetID,
-                Collect_rate = mineRessources == Mine.Ressources.Deuterium ? (planet.Dist_to_star - 50f) / 995f : 10
+                CollectRate = mineRessources == Mine.Ressources.Deuterium ? (planet.Dist_to_star - 50f) / 995f : 10
             };
 
             try
@@ -161,7 +161,7 @@ namespace Ogame.Data
                 Caps = caps,
                 CapsID = caps.CapsID,
                 Level = 0,
-                Collect_rate = 11 - (planet.Dist_to_star - 50f) / 995f,
+                CollectRate = 11 - (planet.Dist_to_star - 50f) / 995f,
                 Planet = planet,
                 PlanetID = planet.PlanetID,
             };

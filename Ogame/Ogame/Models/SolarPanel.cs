@@ -10,7 +10,7 @@ namespace Ogame.Models
         public int SolarPanelID { get; set; }
         public Planet Planet { get; set; }
         public int Level { get; set; }
-        public float Collect_rate { get; set; }
+        public float CollectRate { get; set; }
         public int PlanetID { get; set; }
         public int CapsID { get; set; }
         public int? ActionID { get; set; }
