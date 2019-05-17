@@ -66,9 +66,16 @@ namespace Ogame.Data
         public static bool UpgradeMine(ApplicationDbContext context, Mine mine)
         {
             ActionCost actionCost = ActionCost.UpgradeMineCost(mine);
-            return (ActionCost.CanUpgrade(actionCost, mine.Planet)
+            var response = (ActionCost.CanUpgrade(actionCost, mine.Planet)
                     && UpdatePlanet(context, mine.Planet, actionCost) 
                     && UpdateTemporalAction(context, mine.Action, actionCost));
+            if (response)
+            {
+                mine.Planet.User.Score += 1;
+                context.Users.Update(mine.Planet.User);
+                context.SaveChanges();
+            }
+            return response;
         }
 
         public static bool UpgradeSolarPanel(ApplicationDbContext context, SolarPanel solarPanel)
@@ -82,24 +89,45 @@ namespace Ogame.Data
         public static bool UpgradeDefense(ApplicationDbContext context, Defense defense)
         {
             ActionCost actionCost = ActionCost.UpgradeDefenseActionCost(defense);
-            return (ActionCost.CanUpgrade(actionCost, defense.Planet)
+            var response = (ActionCost.CanUpgrade(actionCost, defense.Planet)
                     && UpdatePlanet(context, defense.Planet, actionCost)
                     && UpdateTemporalAction(context, defense.Action, actionCost));
+            if (response)
+            {
+                defense.Planet.User.Score += 1;
+                context.Users.Update(defense.Planet.User);
+                context.SaveChanges();
+            }
+            return response;
         }
 
         public static bool UpgradeSpaceship(ApplicationDbContext context, Spaceship spaceship)
         {
             ActionCost actionCost = ActionCost.UpgradeSpaceshipActionCost(spaceship);
-            return (ActionCost.CanUpgrade(actionCost, spaceship.Planet)
+            var response = (ActionCost.CanUpgrade(actionCost, spaceship.Planet)
                     && UpdatePlanet(context, spaceship.Planet, actionCost)
                     && UpdateTemporalAction(context, spaceship.Action, actionCost));
+            if (response)
+            {
+                spaceship.Planet.User.Score += 1;
+                context.Users.Update(spaceship.Planet.User);
+                context.SaveChanges();
+            }
+            return response;
         }
 
         public static bool addSpaceship(ApplicationDbContext context, Planet planet)
         {
             ActionCost actionCost = ActionCost.createSpaceshipCost();
-            return ActionCost.CanCreateSpaceship(actionCost, planet)
+            var response = ActionCost.CanCreateSpaceship(actionCost, planet)
                 && AddSpaceship(context, planet, actionCost);
+            if (response)
+            {
+                planet.User.Score += 1;
+                context.Users.Update(planet.User);
+                context.SaveChanges();
+            }
+            return response;
         }
     }
 }

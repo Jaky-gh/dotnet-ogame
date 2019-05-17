@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,15 +16,23 @@ namespace Ogame.Controllers
     public class TemporalActionsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<User> _userManager;
 
-        public TemporalActionsController(ApplicationDbContext context)
+        public TemporalActionsController(ApplicationDbContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: TemporalActions
         public async Task<IActionResult> Index()
         {
+            User user = await GetCurrentUserAsync();
+            if (!user.IsAdmin)
+            {
+                return NotFound();
+            }
+            
             var applicationDbContext = _context.Actions.Include(t => t.Target);
             return View(await applicationDbContext.ToListAsync());
         }
@@ -32,6 +41,12 @@ namespace Ogame.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
+            {
+                return NotFound();
+            }
+
+            User user = await GetCurrentUserAsync();
+            if (!user.IsAdmin)
             {
                 return NotFound();
             }
@@ -48,8 +63,14 @@ namespace Ogame.Controllers
         }
 
         // GET: TemporalActions/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            User user = await GetCurrentUserAsync();
+            if (!user.IsAdmin)
+            {
+                return NotFound();
+            }
+
             ViewData["TargetID"] = new SelectList(_context.Planets, "PlanetID", "PlanetID");
             return View();
         }
@@ -61,6 +82,12 @@ namespace Ogame.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TemporalActionID,Due_to,Type,TargetID")] TemporalAction temporalAction)
         {
+            User user = await GetCurrentUserAsync();
+            if (!user.IsAdmin)
+            {
+                return NotFound();
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(temporalAction);
@@ -74,6 +101,12 @@ namespace Ogame.Controllers
         // GET: TemporalActions/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            User user = await GetCurrentUserAsync();
+            if (!user.IsAdmin)
+            {
+                return NotFound();
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -96,6 +129,12 @@ namespace Ogame.Controllers
         public async Task<IActionResult> Edit(int id, [Bind("TemporalActionID,Due_to,Type,TargetID")] TemporalAction temporalAction)
         {
             if (id != temporalAction.TemporalActionID)
+            {
+                return NotFound();
+            }
+
+            User user = await GetCurrentUserAsync();
+            if (!user.IsAdmin)
             {
                 return NotFound();
             }
@@ -132,6 +171,12 @@ namespace Ogame.Controllers
                 return NotFound();
             }
 
+            User user = await GetCurrentUserAsync();
+            if (!user.IsAdmin)
+            {
+                return NotFound();
+            }
+
             var temporalAction = await _context.Actions
                 .Include(t => t.Target)
                 .FirstOrDefaultAsync(m => m.TemporalActionID == id);
@@ -148,6 +193,12 @@ namespace Ogame.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            User user = await GetCurrentUserAsync();
+            if (!user.IsAdmin)
+            {
+                return NotFound();
+            }
+
             var temporalAction = await _context.Actions.FindAsync(id);
             _context.Actions.Remove(temporalAction);
             await _context.SaveChangesAsync();
@@ -157,6 +208,11 @@ namespace Ogame.Controllers
         private bool TemporalActionExists(int id)
         {
             return _context.Actions.Any(e => e.TemporalActionID == id);
+        }
+        
+        private async Task<User> GetCurrentUserAsync()
+        {
+            return await _userManager.FindByIdAsync(_userManager.GetUserId(User));
         }
     }
 }

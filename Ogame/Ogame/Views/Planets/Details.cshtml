@@ -36,6 +36,9 @@
                     <span class="entity-property">@mine.CollectRate per 5 min</span>
                     <span class="entity-property">Level @mine.Level</span>
                 </div>
+                <div class="row entity-properties">
+                    <span class="entity-property">@mine.Action.Type</span>
+                </div> 
                 @{
                     var actionCost = Ogame.Data.ActionCost.UpgradeMineCost(mine);
                     var canUpgrade = Ogame.Data.ActionCost.CanUpgrade(actionCost, Model._planet);
@@ -61,14 +64,17 @@
                     <span class="entity-property">@defense.Energy energy</span>
                     <span class="entity-property">Level @defense.Level</span>
                 </div>
+                <div class="row entity-properties">
+                    <span class="entity-property">@defense.Action.Type</span>
+                </div>
                 @{
-                    var actionCost = Ogame.Data.ActionCost.UpgradeDefenseActionCost(defense);
-                    var canUpgrade = Ogame.Data.ActionCost.CanUpgrade(actionCost, Model._planet);
+        var actionCost = Ogame.Data.ActionCost.UpgradeDefenseActionCost(defense);
+        var canUpgrade = Ogame.Data.ActionCost.CanUpgrade(actionCost, Model._planet);
                 }
                 @if (canUpgrade)
-                {
-                    <a class="upgrade-button" asp-controller="Planets" asp-action="UpgradeDefense" asp-route-id="@defense.DefenseID"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
-                }
+    {
+            <a class="upgrade-button" asp-controller="Planets" asp-action="UpgradeDefense" asp-route-id="@defense.DefenseID"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
+}
 
             </div>
         </div>
@@ -102,6 +108,9 @@
                     <span class="entity-property">@spaceship.Energy energy</span>
                     <span class="entity-property">Level @spaceship.Level</span>
                 </div>
+                <div class="row entity-properties">
+                    <span class="entity-property">@spaceship.Action.Type</span>
+                </div>
                 @{
                     var actionCost = Ogame.Data.ActionCost.UpgradeSpaceshipActionCost(spaceship);
                     var canUpgrade = Ogame.Data.ActionCost.CanUpgrade(actionCost, Model._planet);
@@ -130,6 +139,9 @@
                 <div class="row entity-properties">
                     <span class="entity-property">@solarpanel.CollectRate per 5 min</span>
                     <span class="entity-property">Level @solarpanel.Level</span>
+                </div>
+                <div class="row entity-properties">
+                    <span class="entity-property">@solarpanel.Action.Type</span>
                 </div>
                 @{
                     var actionCost = Ogame.Data.ActionCost.UpgradeSolarPanelCost(solarpanel);
