@@ -3,80 +3,131 @@
 
 @{
     ViewData["Title"] = "Log in";
+    ViewData["hideNavBar"] = true;
+    ViewData["hideFooter"] = true;
 }
 
-<h2>@ViewData["Title"]</h2>
-<div class="row">
-    <div class="col-md-4">
-        <section>
-            <form method="post">
-                <h4>Use a local account to log in.</h4>
-                <hr />
-                <div asp-validation-summary="All" class="text-danger"></div>
-                <div class="form-group">
-                    <label asp-for="Input.Email"></label>
-                    <input asp-for="Input.Email" class="form-control" />
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Input.Password"></label>
-                    <input asp-for="Input.Password" class="form-control" />
-                    <span asp-validation-for="Input.Password" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <div class="checkbox">
-                        <label asp-for="Input.RememberMe">
-                            <input asp-for="Input.RememberMe" />
-                            @Html.DisplayNameFor(m => m.Input.RememberMe)
-                        </label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-default">Log in</button>
-                </div>
-                <div class="form-group">
-                    <p>
-                        <a asp-page="./ForgotPassword">Forgot your password?</a>
-                    </p>
-                    <p>
-                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-                    </p>
-                </div>
-            </form>
-        </section>
+<div class="login-container">
+  <div class="row w-100">
+    <div class="col-sm-6 text-center">
+          <h2 class="text-white">Log in to manage your empire !</h2>
+          <section>
+              <form method="post" class="form-container">
+                  <div asp-validation-summary="All" class="text-white"></div>
+                  <div class="form-group input-group">
+                      <input placeholder="Email" asp-for="Input.Email" class="form-control" />
+                      <span asp-validation-for="Input.Email" class="text-white"></span>
+                  </div>
+                  <div class="form-group input-group">
+                      <input placeholder="Password" asp-for="Input.Password" class="form-control" />
+                      <span asp-validation-for="Input.Password" class="text-white"></span>
+                  </div>
+                  <div class="form-group button-group">
+                      <button type="submit" class="login-button btn btn-secondary btn-lg">Connect</button>
+                  </div>
+              </form>
+          </section>
     </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h4>Use another service to log in.</h4>
-            <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                {
-                    <div>
-                        <p>
-                            There are no external authentication services configured. See <a href="https://go.microsoft.com/fwlink/?LinkID=532715">this article</a>
-                            for details on setting up this ASP.NET application to support logging in via external services.
-                        </p>
-                    </div>
-                }
-                else
-                {
-                    <form asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                        <div>
-                            <p>
-                                @foreach (var provider in Model.ExternalLogins)
-                                {
-                                    <button type="submit" class="btn btn-default" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                                }
-                            </p>
-                        </div>
-                    </form>
-                }
-            }
-        </section>
+    <div class="col-sm-6 text-center">
+      <h2 class="text-white">Not yet registered ? Join the Universe !</h2>
+      <form method="post">
+        <a type="button" asp-page="./Register"
+          class="register-button btn btn-secondary btn-lg"
+          asp-route-returnUrl="@Model.ReturnUrl">Create an Account</a>
+      </form>
     </div>
+  </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+
+
+<style>
+html, body {
+  height: 100%;
+  padding: 0;
+}
+
+body {
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.1)), url(/images/home_bg.jpg);
+}
+
+.container {
+  height: 100%;
+}
+
+.login-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.button-group {
+  text-align: center;
+} 
+
+.login-button {
+  font-size: 20px;
+  padding: 7px 60px;
+  background-color: black;
+  color: white;
+  font-variant: small-caps;
+  transition: all 1s cubic-bezier(0,-0.34, 0, 0.97);
+  border: 1px solid transparent;
+  border-radius: 6px;
+}
+
+.login-button:hover {
+  color: white;
+  background-color: black;
+  transition: all 1s ease;
+  padding: 7px 100px;
+}
+
+.register-button {
+  margin-top: 40px;
+  font-size: 20px;
+  padding: 12px 60px;
+  background-color: black;
+  color: white;
+  font-variant: small-caps;
+  transition: all 1s cubic-bezier(0,-0.34, 0, 0.97);
+  border: 1px solid transparent;
+  border-radius: 6px;
+}
+
+.register-button:hover {
+  color: white;
+  background-color: black;
+  transition: all 1s ease;
+  padding: 12px 100px;
+}
+
+.input-group {
+  width: 300px;
+}
+
+.form-control {
+  font-size: 18px;
+  height: 45px;
+  border-radius: 4px;
+}
+
+.text-white {
+  color: white;
+}
+
+.w-100 {
+  width: 100%;
+}
+</style>

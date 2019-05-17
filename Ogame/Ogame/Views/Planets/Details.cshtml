@@ -1,87 +1,199 @@
 ﻿@model Ogame.Models.PlanetView.PlanetDetailsViewInterface
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Planet <" + Model._planet.Name + ">";
+    var user = Model._user;
 }
 
-<h2>Details</h2>
+<div class="planet-container">
+    <h2>
+        @Html.DisplayFor(model => model._planet.Name)
+    </h2>
 
-<div>
-    <h4>Planet</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model._planet.User)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model._planet.User.UserName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model._planet.Name)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model._planet.Name)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model._planet.Dist_to_star)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model._planet.Dist_to_star)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model._planet.X)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model._planet.X)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model._planet.Y)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model._planet.Y)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model._planet.Metal)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model._planet.Metal)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model._planet.Cristal)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model._planet.Cristal)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model._planet.Deuterium)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model._planet.Deuterium)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model._planet.Energy)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model._planet.Energy)
-        </dd>
-        @foreach(var item in Model._planet.Mines)
-        {
-            <dt>
-                @Html.DisplayNameFor(model => model._planet.Mines)
-            </dt>
-            <dd>
-                @item.Level
-            </dd>
+    <div class="row planet-resources">
+        <span class="col planet-resources-item"><b>Cristal:</b> @Html.DisplayFor(model => model._planet.Cristal)</span>
+        <span class="col planet-resources-item"><b>Metal:</b> @Html.DisplayFor(model => model._planet.Metal)</span>
+        <span class="col planet-resources-item"><b>Deut:</b> @Html.DisplayFor(model => model._planet.Deuterium)</span>
+        <span class="col planet-resources-item"><b>Energy:</b> @Html.DisplayFor(model => model._planet.Energy)</span>
+    </div>
+</div>
+
+<h3>Mines</h3>
+<div class="row">
+    <div class="col-md-3 padding-add-new">
+        <div class="entity-container bg-add-new" onclick="location.href='@Url.Action("Create", "Mine")'">
+            <img class="entity-icon" src="/images/mine-icon.png" />
+            <span class="entity-name">Add New</span>
+        </div>
+    </div>
+    @foreach (var mine in ViewData["mines"] as List<Mine>)
+    {
+        <div class="col-md-3">
+            <div class="entity-container" onclick="location.href='@Url.Action("Details", "Mine", new { id = mine.MineID })'">
+                <img class="entity-icon" src="/images/mine-icon.png" />
+                <span class="entity-name">@mine.Ressource</span>
+                <div class="row entity-properties">
+                    <span class="entity-property">@mine.Collect_rate/s</span>
+                    <span class="entity-property">Level @mine.Level</span>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<h3>Defenses</h3>
+<div class="row">
+    <div class="col-md-3 padding-add-new">
+        <div class="entity-container bg-add-new" onclick="location.href='@Url.Action("Create", "Defenses")'">
+            <img class="entity-icon" src="/images/defense-icon.png" />
+            <span class="entity-name">Add New</span>
+        </div>
+    </div>
+    @foreach (var defense in ViewData["defenses"] as List<Defense>)
+    {
+        <div class="col-md-3">
+            <div class="entity-container bg-blue" onclick="location.href='@Url.Action("Details", "Defenses", new { id = defense.DefenseID })'">
+                <img class="entity-icon" src="/images/defense-icon.png" />
+                <span class="entity-name">Defense D-@defense.DefenseID</span>
+                <div class="row entity-properties">
+                    <span class="entity-property">@defense.Energy energy</span>
+                    <span class="entity-property">Level @defense.Level</span>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<h3>Spaceships</h3>
+<div class="row">
+    <div class="col-md-3 padding-add-new">
+        <div class="entity-container bg-add-new" onclick="location.href='@Url.Action("Create", "Spaceships")'">
+            <img class="entity-icon" src="/images/spaceship-icon.png" />
+            <span class="entity-name">Add New</span>
+        </div>
+    </div>
+    @foreach (var spaceship in ViewData["spaceships"] as List<Spaceship>)
+    {
+        <div class="col-md-3">
+            <div class="entity-container bg-orange" onclick="location.href='@Url.Action("Details", "Spaceships", new { id = spaceship.SpaceshipID })'">
+                <img class="entity-icon" src="/images/spaceship-icon.png" />
+                <span class="entity-name">Spaceship S-@spaceship.SpaceshipID</span>
+                <div class="row entity-properties">
+                    <span class="entity-property">@spaceship.Energy energy</span>
+                    <span class="entity-property">Level @spaceship.Level</span>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<h3>Solar Panels</h3>
+<div class="row">
+    <div class="col-md-3 padding-add-new">
+        <div class="entity-container bg-add-new" onclick="location.href='@Url.Action("Create", "SolarPanels")'">
+            <img class="entity-icon" src="/images/solar-panel-icon.png" />
+            <span class="entity-name">Add New</span>
+        </div>
+    </div>
+    @foreach (var solarpanel in ViewData["solarPanels"] as List<SolarPanel>)
+    {
+        <div class="col-md-3">
+            <div class="entity-container bg-yellow" onclick="location.href='@Url.Action("Details", "SolarPanels", new { id = solarpanel.SolarPanelID })'">
+                <img class="entity-icon" src="/images/solar-panel-icon.png" />
+                <span class="entity-name">Spaceship S-@solarpanel.SolarPanelID</span>
+                <div class="row entity-properties">
+                    <span class="entity-property">@solarpanel.Collect_rate/s</span>
+                    <span class="entity-property">Level @solarpanel.Level</span>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .planet-container {
+        background: linear-gradient(45deg,#e25d5e, #d7addeb0);
+        padding: 45px 0;
+        text-align: center;
+        border-radius: 15px;
+        box-shadow: #000000 0px 0px 6px -1px;
+        transition: all 300ms ease;
+        margin-bottom: 20px;
+        margin-top: 20px;
+        position: relative;
+    }
+
+    .planet-resources {
+        position: absolute;
+        bottom: 10px;
+        left: 0;
+        right: 0;
+        font-variant: small-caps;
+    }
+
+    .planet-resources-item {
+        background-color: #292929;
+        padding: 2px 4px;
+        border-radius: 6px;
+    }
+
+    .entity-container {
+        background-color: white;
+        color: black;
+        padding: 40px 0;
+        text-align: center;
+        border-radius: 15px;
+        box-shadow: #000000 0px 0px 6px -1px;
+        transition: all 200ms ease;
+        margin-bottom: 10px;
+    }
+
+        .entity-container:hover {
+            cursor: pointer;
+            transition: all 200ms ease;
+            background-color: #4e4d4d;
+            color: white;
         }
-    </dl>
-</div>
-<div>
-    @if (Model._user.IsAdmin)
-    {
-        <p><a asp-action="Edit" asp-route-id="@Model._planet.PlanetID">Edit</a> | <a asp-action="Index">Back to List</a></p>
+
+    .entity-icon {
+        height: 50px;
     }
-    else
-    {
-        <p><a asp-action="Index">Back to List</a></p>
+
+    .entity-name {
+        margin-left: 20px;
+        vertical-align: -webkit-baseline-middle;
+        font-weight: bold;
+        font-size: 30px;
+        font-variant: small-caps;
     }
-</div>
+
+    .entity-properties {
+        position: absolute;
+        right: 0;
+        bottom: 20px;
+        left: 0;
+        color: white;
+    }
+
+    .entity-property {
+        background-color: #292929;
+        padding: 2px 4px;
+        border-radius: 6px;
+    }
+
+    .bg-blue {
+        background-color: #83d1ef;
+    }
+
+    .bg-orange {
+        background-color: #ff9c7e;
+    }
+
+    .bg-yellow {
+        background-color: #ffee73;
+    }
+
+    .padding-add-new {
+        padding-right: 50px;
+    }
+</style>
