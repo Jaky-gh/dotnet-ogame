@@ -85,7 +85,7 @@ namespace Ogame.Data
                     actionHolder.Caps.Deuterium_cap *= mult;
                     actionHolder.Caps.Energy_cap *= mult;
                     actionHolder.Caps.Repair_factor *= mult;
-                    actionHolder.Caps.Growth_factor *= mult;
+                    actionHolder.Caps.Growth_factor *= 1.2f;
                     context.Caps.Update(actionHolder.Caps);
                     context.Update(actionHolder);
                     break;
@@ -114,7 +114,7 @@ namespace Ogame.Data
                 int numCycle = (int)(interval / CycleDuration);
                 if (numCycle > 0)
                 {
-                    float produce = numCycle * actionHolder.Caps.Growth_factor;
+                    float produce = numCycle;
                     if (actionHolder is Mine)
                     {
                         produce *= ((Mine)actionHolder).CollectRate;
@@ -157,7 +157,7 @@ namespace Ogame.Data
                         produce *= ((SolarPanel)actionHolder).CollectRate;
                         if (((SolarPanel)actionHolder).Planet.Energy + produce > ((SolarPanel)actionHolder).Caps.Energy_cap)
                         {
-                            ((SolarPanel)actionHolder).Planet.Energy = ((SolarPanel)actionHolder).Caps.Energy_cap * ((SolarPanel)actionHolder).Level * ((SolarPanel)actionHolder).Caps.Growth_factor;
+                            ((SolarPanel)actionHolder).Planet.Energy = ((SolarPanel)actionHolder).Caps.Energy_cap;
                         }
                         else
                         {
