@@ -323,7 +323,7 @@ namespace Ogame.Controllers
             return RedirectToAction("Details", new { id = spaceship.PlanetID });
         }
 
-       /*public async Task<IActionResult> CreateSpaceship(int? id)
+        public async Task<IActionResult> CreateSpaceship(int? id)
         {
             var planet = await _context.Planets.Include(s => s.Spaceships).FirstOrDefaultAsync(p => p.PlanetID == id);
             if (planet == null)
@@ -331,9 +331,10 @@ namespace Ogame.Controllers
                 return NotFound();
             }
 
+            if (!ElementUpgrader.addSpaceship(_context, planet))
+                Console.WriteLine("Spaceship creation failed");
 
-
-            return RedirectToAction("Details", new { id = spaceship.PlanetID });
-        }*/
+            return RedirectToAction("Details", new { id = planet.PlanetID });
+        }
     }
 }
