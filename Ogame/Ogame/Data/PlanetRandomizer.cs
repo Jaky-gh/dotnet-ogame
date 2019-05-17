@@ -181,7 +181,7 @@ namespace Ogame.Data
             return planet;
         }
 
-        public async static Task<Planet> FindPlanetForNewPlayer(ApplicationDbContext context)
+        public static async Task<Planet> FindPlanetForNewPlayer(ApplicationDbContext context)
         {
             // We count the number of planet already existing to try to find an inoccupied position
             int numPlanet = await context.Planets.CountAsync();

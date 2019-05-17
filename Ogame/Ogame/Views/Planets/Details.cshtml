@@ -64,6 +64,15 @@
         <dd>
             @Html.DisplayFor(model => model._planet.Energy)
         </dd>
+        @foreach(var item in Model._planet.Mines)
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model._planet.Mines)
+            </dt>
+            <dd>
+                @item.Level
+            </dd>
+        }
     </dl>
 </div>
 <div>
