@@ -36,23 +36,18 @@ namespace Ogame.Controllers
                 if (planet.PlanetID != 0)
                 {
                     _context.Planets.Update(planet);
-                    DefaultElementsGenerator.CreateDefaultSpaceship(_context, planet);
-                    DefaultElementsGenerator.CreateDefaultMine(_context, Mine.Ressources.Metal, planet);
-                    DefaultElementsGenerator.CreateDefaultMine(_context, Mine.Ressources.Cristal, planet);
-                    DefaultElementsGenerator.CreateDefaultMine(_context, Mine.Ressources.Deuterium, planet);
-                    DefaultElementsGenerator.CreateDefaultSolarPanel(_context, planet);
-                    DefaultElementsGenerator.CreateDefaultDefense(_context, planet);
+                    
                 }
                 else
                 {
                     _context.Planets.Add(planet);
-                    DefaultElementsGenerator.CreateDefaultSpaceship(_context, planet);
-                    DefaultElementsGenerator.CreateDefaultMine(_context, Mine.Ressources.Metal, planet);
-                    DefaultElementsGenerator.CreateDefaultMine(_context, Mine.Ressources.Cristal, planet);
-                    DefaultElementsGenerator.CreateDefaultMine(_context, Mine.Ressources.Deuterium, planet);
-                    DefaultElementsGenerator.CreateDefaultSolarPanel(_context, planet);
-                    DefaultElementsGenerator.CreateDefaultDefense(_context, planet);
                 }
+                DefaultElementsGenerator.CreateDefaultSpaceship(_context, planet);
+                DefaultElementsGenerator.CreateDefaultMine(_context, Mine.Ressources.Metal, planet);
+                DefaultElementsGenerator.CreateDefaultMine(_context, Mine.Ressources.Cristal, planet);
+                DefaultElementsGenerator.CreateDefaultMine(_context, Mine.Ressources.Deuterium, planet);
+                DefaultElementsGenerator.CreateDefaultSolarPanel(_context, planet);
+                DefaultElementsGenerator.CreateDefaultDefense(_context, planet);
                 await _context.SaveChangesAsync();
             }
 
