@@ -14,7 +14,7 @@ namespace Ogame.Data
             {
                 Cristal_cap = 0,
                 Deuterium_cap = 0,
-                Growth_factor = 0,
+                Growth_factor = 1.2f,
                 Metal_cap = 0,
                 Energy_cap = 0,
                 Repair_factor = 0,
@@ -57,10 +57,17 @@ namespace Ogame.Data
         {
             TemporalAction action = CreateDefaultAction(context);
             Caps caps = CreateDefaultCaps(context);
+            caps.Energy_cap = 100;
+            caps.Cristal_cap = 100;
+            caps.Deuterium_cap = 1;
+            caps.Metal_cap = 300;
+            caps.Repair_factor = 10;
+            context.Caps.Update(caps);
 
             Defense defense = new Defense
             {
                 Action = action,
+                Level = 0,
                 ActionID = action.TemporalActionID,
                 Planet = planet,
                 PlanetID = planet.PlanetID,
@@ -89,6 +96,23 @@ namespace Ogame.Data
         {
             TemporalAction action = CreateDefaultAction(context);
             Caps caps = CreateDefaultCaps(context);
+            caps.Energy_cap = 100;
+            caps.Cristal_cap = 200;
+            caps.Deuterium_cap = 10;
+            caps.Metal_cap = 200;
+            switch (mineRessources)
+            {
+                case Mine.Ressources.Cristal:
+                    caps.Cristal_cap = 1000;
+                    break;
+                case Mine.Ressources.Metal:
+                    caps.Metal_cap = 1000;
+                    break;
+                case Mine.Ressources.Deuterium:
+                    caps.Deuterium_cap = 100;
+                    break;
+            }
+            context.Caps.Update(caps);
 
             Mine mine = new Mine
             {
@@ -99,7 +123,8 @@ namespace Ogame.Data
                 Level = 0,
                 Ressource = mineRessources,
                 Planet = planet,
-                PlanetID = planet.PlanetID
+                PlanetID = planet.PlanetID,
+                Collect_rate = mineRessources == Mine.Ressources.Deuterium ? (planet.Dist_to_star - 50f) / 995f : 10
             };
 
             try
@@ -122,6 +147,12 @@ namespace Ogame.Data
         {
             TemporalAction action = CreateDefaultAction(context);
             Caps caps = CreateDefaultCaps(context);
+            caps.Energy_cap = 1000;
+            caps.Cristal_cap = 300;
+            caps.Deuterium_cap = 5;
+            caps.Metal_cap = 100;
+            context.Caps.Update(caps);
+
 
             SolarPanel solarPanel = new SolarPanel
             {
@@ -130,7 +161,7 @@ namespace Ogame.Data
                 Caps = caps,
                 CapsID = caps.CapsID,
                 Level = 0,
-                Collect_rate = 0,
+                Collect_rate = 11 - (planet.Dist_to_star - 50f) / 995f,
                 Planet = planet,
                 PlanetID = planet.PlanetID,
             };
@@ -155,6 +186,13 @@ namespace Ogame.Data
         {
             TemporalAction action = CreateDefaultAction(context);
             Caps caps = CreateDefaultCaps(context);
+            caps.Repair_factor = 10;
+            caps.Energy_cap = 200;
+            caps.Cristal_cap = 300;
+            caps.Deuterium_cap = 50;
+            caps.Metal_cap = 300;
+            context.Caps.Update(caps);
+
 
             Spaceship spaceship = new Spaceship
             {

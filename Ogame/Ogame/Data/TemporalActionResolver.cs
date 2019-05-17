@@ -10,7 +10,7 @@ namespace Ogame.Data
     public class TemporalActionResolver
     {
         private static readonly float defenseDamageMult = 100;
-        private static readonly TimeSpan ProductionCycle = new TimeSpan(0, 0, 5, 0);
+        public static readonly TimeSpan CycleDuration = new TimeSpan(0, 0, 5, 0);
 
 
         private static int IActionHolderSort(IActionHolder a1, IActionHolder a2)
@@ -38,7 +38,13 @@ namespace Ogame.Data
                         {
                             (actionHolder as Spaceship).Energy = 0;
                         }
-                        (actionHolder as Spaceship).Energy -= defense.Level * defenseDamageMult;
+                        (actionHolder as Spaceship).Energy -= defense.Energy;
+                        defense.Energy -= (actionHolder as Spaceship).Energy;
+                        if (defense.Energy < 0)
+                        {
+                            defense.Energy = 0;
+                        }
+                        context.Defenses.Update(defense);
                         if ((actionHolder as Spaceship).Energy < 0)
                         {
                             (actionHolder as Spaceship).Energy = 0;
@@ -69,17 +75,47 @@ namespace Ogame.Data
                     }
                     break;
                 case TemporalAction.ActionType.Production:
-                    actionHolder.Action.Due_to = actionHolder.Action.Due_to.Add(-ProductionCycle);
+                    actionHolder.Action.Due_to = actionHolder.Action.Due_to.Add(-CycleDuration);
                     break;
                 case TemporalAction.ActionType.Upgrade:
                     actionHolder.Level += 1;
+                    if (actionHolder is IHolderWithProduction)
+                    {
+                        ((IHolderWithProduction)actionHolder).Collect_rate *= 1.2f;
+                    }
+                    float mult = actionHolder.Caps.Growth_factor;
+                    actionHolder.Caps.Cristal_cap *= mult;
+                    actionHolder.Caps.Metal_cap *= mult;
+                    actionHolder.Caps.Deuterium_cap *= mult;
+                    actionHolder.Caps.Energy_cap *= mult;
+                    actionHolder.Caps.Repair_factor *= mult;
+                    actionHolder.Caps.Growth_factor *= mult;
+                    context.Caps.Update(actionHolder.Caps);
                     context.Update(actionHolder);
+                    break;
+                case TemporalAction.ActionType.Idle:
+                    if (actionHolder is IHolderWithEnergy)
+                    {
+                        TimeSpan interval = until - actionHolder.Action.Due_to;
+                        int numCycle = (int)(interval / CycleDuration);
+                        if (numCycle > 0)
+                        {
+                            float energy = MathF.Min(MathF.Min(
+                                numCycle * actionHolder.Caps.Repair_factor
+                                , actionHolder.Planet.Energy)
+                                , actionHolder.Caps.Energy_cap - ((IHolderWithEnergy)actionHolder).Energy);
+                            ((IHolderWithEnergy)actionHolder).Energy += energy;
+                            actionHolder.Planet.Energy -= energy;
+                            context.Update(actionHolder);
+                            context.Planets.Update(actionHolder.Planet);
+                        }
+                    }
                     break;
             }
             if (actionHolder is Mine || actionHolder is SolarPanel)
             {
                 TimeSpan interval = until - actionHolder.Action.Due_to;
-                int numCycle = (int)(interval / ProductionCycle);
+                int numCycle = (int)(interval / CycleDuration);
                 if (numCycle > 0)
                 {
                     float produce = numCycle * actionHolder.Level * actionHolder.Caps.Growth_factor;
@@ -133,7 +169,7 @@ namespace Ogame.Data
                         }
                     }
                     actionHolder.Action.Type = TemporalAction.ActionType.Production;
-                    actionHolder.Action.Due_to = actionHolder.Action.Due_to.Add((numCycle + 1) * ProductionCycle);
+                    actionHolder.Action.Due_to = actionHolder.Action.Due_to.Add((numCycle + 1) * CycleDuration);
                     context.Actions.Update(actionHolder.Action);
                     context.Planets.Update(actionHolder.Planet);
                 }
@@ -141,7 +177,7 @@ namespace Ogame.Data
             else
             {
                 actionHolder.Action.Type = TemporalAction.ActionType.Idle;
-                actionHolder.Action.Due_to = until.Add(ProductionCycle);
+                actionHolder.Action.Due_to = until.Add(CycleDuration);
                 actionHolder.Action.TargetID = null;
                 actionHolder.Action.Target = null;
             }
@@ -178,6 +214,7 @@ namespace Ogame.Data
                 .Include(m => m.Action)
                 .Where(m => m.Action != null && m.Action.Due_to < now)
                 .Include(m => m.Caps)
+                .Include(m => m.Planet.SolarPanels)
                 .OrderBy(m => m.Action.Due_to)
                 .ToArray();
 

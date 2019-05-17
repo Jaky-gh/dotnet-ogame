@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Ogame.Models
 {
-    public class Mine : IActionHolder
+    public class Mine : IHolderWithProduction
     {
         public enum Ressources
         {
@@ -18,7 +18,7 @@ namespace Ogame.Models
         public int? ActionID { get; set; }
         public int Level { get; set; }
         public Ressources Ressource { get; set; }
-        public float Collect_rate;
+        public float Collect_rate { get; set; }
 
         public Planet Planet { get; set; }
         public Caps Caps { get; set; }
