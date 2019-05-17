@@ -84,5 +84,13 @@ namespace Ogame.Data
                 ActionTime = (1 + MathF.Pow(defense.Level, 2)) * TemporalActionResolver.CycleDuration
             };
         }
+
+        public static bool CanUpgrade(ActionCost actionCost, Planet planet)
+        {
+            return (planet.Metal >= actionCost.MetalCost)
+                   && (planet.Cristal >= actionCost.CristalCost)
+                   && (planet.Deuterium >= actionCost.DeuteriumCost)
+                   && (planet.Energy >= actionCost.EnergyCost);
+        }
     }
 }
