@@ -33,10 +33,6 @@ namespace Ogame.Data
                     HandleTemoralActionForUserUntil(context, actionHolder.Action.Target.UserID, actionHolder.Action.Due_to);
                     foreach (var defense in actionHolder.Action.Target.Defenses)
                     {
-                        if (defense.Level > actionHolder.Level)
-                        {
-                            (actionHolder as Spaceship).Energy = 0;
-                        }
                         (actionHolder as Spaceship).Energy -= defense.Energy;
                         defense.Energy -= (actionHolder as Spaceship).Energy;
                         if (defense.Energy < 0)
@@ -44,7 +40,7 @@ namespace Ogame.Data
                             defense.Energy = 0;
                         }
                         context.Defenses.Update(defense);
-                        if ((actionHolder as Spaceship).Energy < 0)
+                        if ((actionHolder as Spaceship).Energy <= 0)
                         {
                             (actionHolder as Spaceship).Energy = 0;
                             break;
@@ -117,14 +113,14 @@ namespace Ogame.Data
                 int numCycle = (int)(interval / CycleDuration);
                 if (numCycle > 0)
                 {
-                    float produce = numCycle * actionHolder.Level * actionHolder.Caps.Growth_factor;
+                    float produce = numCycle * actionHolder.Caps.Growth_factor;
                     if (actionHolder is Mine)
                     {
                         produce *= ((Mine)actionHolder).CollectRate;
                         switch (((Mine)actionHolder).Ressource)
                         {
                             case Mine.Ressources.Cristal:
-                                if (((Mine)actionHolder).Planet.Cristal + produce > ((Mine)actionHolder).Caps.Cristal_cap * ((Mine)actionHolder).Level * ((Mine)actionHolder).Caps.Growth_factor)
+                                if (((Mine)actionHolder).Planet.Cristal + produce > ((Mine)actionHolder).Caps.Cristal_cap)
                                 {
                                     ((Mine)actionHolder).Planet.Cristal = ((Mine)actionHolder).Caps.Cristal_cap;
                                 }
@@ -134,7 +130,7 @@ namespace Ogame.Data
                                 }
                                 break;
                             case Mine.Ressources.Metal:
-                                if (((Mine)actionHolder).Planet.Metal + produce > ((Mine)actionHolder).Caps.Metal_cap * ((Mine)actionHolder).Level * ((Mine)actionHolder).Caps.Growth_factor)
+                                if (((Mine)actionHolder).Planet.Metal + produce > ((Mine)actionHolder).Caps.Metal_cap)
                                 {
                                     ((Mine)actionHolder).Planet.Metal = ((Mine)actionHolder).Caps.Metal_cap;
                                 }
@@ -144,7 +140,7 @@ namespace Ogame.Data
                                 }
                                 break;
                             case Mine.Ressources.Deuterium:
-                                if (((Mine)actionHolder).Planet.Deuterium + produce > ((Mine)actionHolder).Caps.Deuterium_cap * ((Mine)actionHolder).Level * ((Mine)actionHolder).Caps.Growth_factor)
+                                if (((Mine)actionHolder).Planet.Deuterium + produce > ((Mine)actionHolder).Caps.Deuterium_cap)
                                 {
                                     ((Mine)actionHolder).Planet.Deuterium = ((Mine)actionHolder).Caps.Deuterium_cap;
                                 }

@@ -273,28 +273,7 @@ namespace Ogame.Controllers
             {
                 try
                 {
-                    TemporalAction temporalAction = spaceship.Action;
-                    Planet planet = await PlanetRandomizer.GetExistingOrRandomPlanet(_context, spaceshipAttackInterface._X, spaceshipAttackInterface._Y);
-
-                    if (planet.PlanetID == 0)
-                    {
-                        _context.Add(planet);
-                        _context.SaveChanges();
-
-                        DefaultElementsGenerator.CreateDefaultSpaceship(_context, planet);
-                        DefaultElementsGenerator.CreateDefaultMine(_context, Mine.Ressources.Metal, planet);
-                        DefaultElementsGenerator.CreateDefaultMine(_context, Mine.Ressources.Cristal, planet);
-                        DefaultElementsGenerator.CreateDefaultMine(_context, Mine.Ressources.Deuterium, planet);
-                        DefaultElementsGenerator.CreateDefaultSolarPanel(_context, planet);
-                        DefaultElementsGenerator.CreateDefaultDefense(_context, planet);
-                    }
-
-                    temporalAction.Due_to = DateTime.Now;
-                    temporalAction.Type = TemporalAction.ActionType.Attack;
-                    temporalAction.TargetID = (await PlanetRandomizer.GetExistingOrRandomPlanet(_context, spaceshipAttackInterface._X, spaceshipAttackInterface._Y)).PlanetID;
-
-                    _context.Update(temporalAction);
-                    await _context.SaveChangesAsync();
+                    await VesselAttackHandler.AttackWithSpaceship(_context, spaceship, spaceshipAttackInterface._X, spaceshipAttackInterface._Y);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
