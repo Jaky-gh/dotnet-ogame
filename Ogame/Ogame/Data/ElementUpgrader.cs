@@ -6,8 +6,24 @@ using Ogame.Models;
 
 namespace Ogame.Data
 {
-    public class ElementUpgrader
+    public static class ElementUpgrader
     {
+        private static bool AddSpaceship(ApplicationDbContext context, Planet planet, ActionCost actionCost)
+        {
+            planet.Deuterium -= actionCost.DeuteriumCost;
+            context.Update(planet);
+            context.SaveChanges();
+            try
+            {
+                DefaultElementsGenerator.CreateDefaultSpaceship(context, planet);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        } 
+
         private static bool UpdatePlanet(ApplicationDbContext context, Planet planet, ActionCost actionCost)
         {
             planet.Cristal -= actionCost.CristalCost;
