@@ -18,7 +18,7 @@ namespace Ogame.Models
         public int? ActionID { get; set; }
         public int Level { get; set; }
         public Ressources Ressource { get; set; }
-        public float Collect_rate { get; set; }
+        public float CollectRate { get; set; }
 
         public Planet Planet { get; set; }
         public Caps Caps { get; set; }

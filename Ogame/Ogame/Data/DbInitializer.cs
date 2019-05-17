@@ -9,7 +9,7 @@ using Ogame.Models;
 
 namespace Ogame.Data
 {
-    public class DbInitializer
+    public static class DbInitializer
     {
         public static void Initialize(ApplicationDbContext context)
         {
@@ -98,7 +98,7 @@ namespace Ogame.Data
 
             var solarpanels = new SolarPanel[]
             {
-                new SolarPanel { ActionID=1, PlanetID=1, Level=2, Collect_rate=10, CapsID=2}
+                new SolarPanel { ActionID=1, PlanetID=1, Level=2, CollectRate=10, CapsID=2}
             };
             foreach (var solarpanel in solarpanels)
             {
@@ -108,7 +108,7 @@ namespace Ogame.Data
 
             var mines = new Mine[]
             {
-                new Mine { ActionID=2, Level=3, CapsID=1, Ressource=Mine.Ressources.Cristal, PlanetID=1, Collect_rate=15 }
+                new Mine { ActionID=2, Level=3, CapsID=1, Ressource=Mine.Ressources.Cristal, PlanetID=1, CollectRate=15 }
             };
             foreach (var mine in mines)
             {

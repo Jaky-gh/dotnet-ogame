@@ -63,7 +63,7 @@ namespace Ogame.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SolarPanelID,Level,Collect_rate,PlanetID,CapsID,ActionID")] SolarPanel solarPanel)
+        public async Task<IActionResult> Create([Bind("SolarPanelID,Level,CollectRate,PlanetID,CapsID,ActionID")] SolarPanel solarPanel)
         {
             if (ModelState.IsValid)
             {
@@ -101,7 +101,7 @@ namespace Ogame.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SolarPanelID,Level,Collect_rate,PlanetID,CapsID,ActionID")] SolarPanel solarPanel)
+        public async Task<IActionResult> Edit(int id, [Bind("SolarPanelID,Level,CollectRate,PlanetID,CapsID,ActionID")] SolarPanel solarPanel)
         {
             if (id != solarPanel.SolarPanelID)
             {

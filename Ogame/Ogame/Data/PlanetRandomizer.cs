@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Ogame.Data
 {
-    public class PlanetRandomizer
+    public static class PlanetRandomizer
     {
         private static readonly int primeNumber1 = 85571;
         private static readonly int primeNumber2 = 195997;

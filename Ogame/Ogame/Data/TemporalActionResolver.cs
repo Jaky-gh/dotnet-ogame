@@ -7,9 +7,8 @@ using System.Linq;
 
 namespace Ogame.Data
 {
-    public class TemporalActionResolver
+    public static class TemporalActionResolver
     {
-        private static readonly float defenseDamageMult = 100;
         public static readonly TimeSpan CycleDuration = new TimeSpan(0, 0, 5, 0);
 
 
@@ -81,7 +80,7 @@ namespace Ogame.Data
                     actionHolder.Level += 1;
                     if (actionHolder is IHolderWithProduction)
                     {
-                        ((IHolderWithProduction)actionHolder).Collect_rate *= 1.2f;
+                        ((IHolderWithProduction)actionHolder).CollectRate *= 1.2f;
                     }
                     float mult = actionHolder.Caps.Growth_factor;
                     actionHolder.Caps.Cristal_cap *= mult;
@@ -121,7 +120,7 @@ namespace Ogame.Data
                     float produce = numCycle * actionHolder.Level * actionHolder.Caps.Growth_factor;
                     if (actionHolder is Mine)
                     {
-                        produce *= ((Mine)actionHolder).Collect_rate;
+                        produce *= ((Mine)actionHolder).CollectRate;
                         switch (((Mine)actionHolder).Ressource)
                         {
                             case Mine.Ressources.Cristal:
@@ -158,7 +157,7 @@ namespace Ogame.Data
                     }
                     else if (actionHolder is SolarPanel)
                     {
-                        produce *= ((SolarPanel)actionHolder).Collect_rate;
+                        produce *= ((SolarPanel)actionHolder).CollectRate;
                         if (((SolarPanel)actionHolder).Planet.Energy + produce > ((SolarPanel)actionHolder).Caps.Energy_cap)
                         {
                             ((SolarPanel)actionHolder).Planet.Energy = ((SolarPanel)actionHolder).Caps.Energy_cap * ((SolarPanel)actionHolder).Level * ((SolarPanel)actionHolder).Caps.Growth_factor;
