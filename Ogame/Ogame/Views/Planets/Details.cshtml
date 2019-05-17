@@ -14,7 +14,7 @@
     <h2>
         @Html.DisplayFor(model => model._planet.Name)
     </h2>
-    <p class="dist-star">Star: @Math.Round((decimal)Model._planet.Dist_to_star, 1) millions km</p>
+    <p class="dist-star">@Math.Round((decimal)Model._planet.Dist_to_star, 1) millions km from Star</p>
 
     <div class="row planet-resources">
         <span class="col planet-resources-item"><b>Cristal:</b> @Math.Round(Model._planet.Cristal)</span>
@@ -30,6 +30,17 @@
     {
         <div class="col-md-4">
             <div class="entity-container">
+                <div class="caps-container">
+                    <div class="row">
+                        <div class="col-md-6 center-column">
+                            <span class="caps-title">Next Upgrade</span>
+                            <span class="caps-item">Cristal: @Math.Round(Ogame.Data.ActionCost.UpgradeMineCost(mine).CristalCost)</span>
+                            <span class="caps-item">Metal: @Math.Round(Ogame.Data.ActionCost.UpgradeMineCost(mine).MetalCost)</span>
+                            <span class="caps-item">Deuterium: @Math.Round(Ogame.Data.ActionCost.UpgradeMineCost(mine).DeuteriumCost)</span>
+                            <span class="caps-item">Energy: @Math.Round(Ogame.Data.ActionCost.UpgradeMineCost(mine).EnergyCost)</span>
+                        </div>
+                    </div>
+                </div>
                 <img class="entity-icon" src="/images/mine-icon.png" />
                 <span class="entity-name">@mine.Ressource</span>
                 <div class="row entity-properties">
@@ -50,7 +61,7 @@
                     var actionCost = Ogame.Data.ActionCost.UpgradeMineCost(mine);
                     var canUpgrade = Ogame.Data.ActionCost.CanUpgrade(actionCost, Model._planet);
                 }
-                @if (canUpgrade)
+                @if (canUpgrade && mine.Action.Type != TemporalAction.ActionType.Upgrade)
                 {
                     <a class="upgrade-button" asp-controller="Planets" asp-action="UpgradeMine" asp-route-id="@mine.MineID"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
                 }
@@ -65,6 +76,17 @@
     {
         <div class="col-md-4">
             <div class="entity-container bg-blue">
+                <div class="caps-container">
+                    <div class="row">
+                        <div class="col-md-6 center-column">
+                            <span class="caps-title">Next Upgrade</span>
+                            <span class="caps-item">Cristal: @Math.Round(Ogame.Data.ActionCost.UpgradeDefenseActionCost(defense).CristalCost)</span>
+                            <span class="caps-item">Metal: @Math.Round(Ogame.Data.ActionCost.UpgradeDefenseActionCost(defense).MetalCost)</span>
+                            <span class="caps-item">Deuterium: @Math.Round(Ogame.Data.ActionCost.UpgradeDefenseActionCost(defense).DeuteriumCost)</span>
+                            <span class="caps-item">Energy: @Math.Round(Ogame.Data.ActionCost.UpgradeDefenseActionCost(defense).EnergyCost)</span>
+                        </div>
+                    </div>
+                </div>
                 <img class="entity-icon" src="/images/defense-icon.png" />
                 <span class="entity-name">Defense</span>
                 <div class="row entity-properties">
@@ -82,13 +104,13 @@
                     }
                 </div>
                 @{
-        var actionCost = Ogame.Data.ActionCost.UpgradeDefenseActionCost(defense);
-        var canUpgrade = Ogame.Data.ActionCost.CanUpgrade(actionCost, Model._planet);
+                    var actionCost = Ogame.Data.ActionCost.UpgradeDefenseActionCost(defense);
+                    var canUpgrade = Ogame.Data.ActionCost.CanUpgrade(actionCost, Model._planet);
                 }
-                @if (canUpgrade)
-    {
-            <a class="upgrade-button" asp-controller="Planets" asp-action="UpgradeDefense" asp-route-id="@defense.DefenseID"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
-}
+                @if (canUpgrade && defense.Action.Type != TemporalAction.ActionType.Upgrade)
+                {
+                    <a class="upgrade-button" asp-controller="Planets" asp-action="UpgradeDefense" asp-route-id="@defense.DefenseID"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
+                }
 
             </div>
         </div>
@@ -115,6 +137,17 @@
     {
         <div class="col-md-4">
             <div class="entity-container bg-orange">
+                <div class="caps-container">
+                    <div class="row">
+                        <div class="col-md-6 center-column">
+                            <span class="caps-title">Next Upgrade</span>
+                            <span class="caps-item">Cristal: @Math.Round(Ogame.Data.ActionCost.UpgradeSpaceshipActionCost(spaceship).CristalCost)</span>
+                            <span class="caps-item">Metal: @Math.Round(Ogame.Data.ActionCost.UpgradeSpaceshipActionCost(spaceship).MetalCost)</span>
+                            <span class="caps-item">Deuterium: @Math.Round(Ogame.Data.ActionCost.UpgradeSpaceshipActionCost(spaceship).DeuteriumCost)</span>
+                            <span class="caps-item">Energy: @Math.Round(Ogame.Data.ActionCost.UpgradeSpaceshipActionCost(spaceship).EnergyCost)</span>
+                        </div>
+                    </div>
+                </div>
                 <img class="entity-icon" src="/images/spaceship-icon.png" />
                 <span class="entity-name">Spaceship S-@spaceship.SpaceshipID</span>
                 <div class="row entity-properties">
@@ -140,11 +173,11 @@
                         canAttack = Ogame.Data.ActionCost.CanAttack(actionCost, spaceship);
                     }
                 }
-                @if (canUpgrade)
+                @if (canUpgrade  && spaceship.Action.Type != TemporalAction.ActionType.Upgrade)
                 {
                     <a class="upgrade-button" asp-controller="Planets" asp-action="UpgradeSpaceship" asp-route-id="@spaceship.SpaceshipID"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
                 }
-                @if (canAttack)
+                @if (canAttack  && spaceship.Action.Type != TemporalAction.ActionType.Attack)
                 {
                     <a class="fight-button" asp-controller="Spaceships" asp-action="Attack" asp-route-id="@spaceship.SpaceshipID"><img class="fight-icon" src="/images/fight-icon.png" /></a>
                 }
@@ -159,6 +192,17 @@
     {
         <div class="col-md-4">
             <div class="entity-container bg-yellow">
+                <div class="caps-container">
+                    <div class="row">
+                        <div class="col-md-6 center-column">
+                            <span class="caps-title">Next Upgrade</span>
+                            <span class="caps-item">Cristal: @Math.Round(Ogame.Data.ActionCost.UpgradeSolarPanelCost(solarpanel).CristalCost)</span>
+                            <span class="caps-item">Metal: @Math.Round(Ogame.Data.ActionCost.UpgradeSolarPanelCost(solarpanel).MetalCost)</span>
+                            <span class="caps-item">Deuterium: @Math.Round(Ogame.Data.ActionCost.UpgradeSolarPanelCost(solarpanel).DeuteriumCost)</span>
+                            <span class="caps-item">Energy: @Math.Round(Ogame.Data.ActionCost.UpgradeSolarPanelCost(solarpanel).EnergyCost)</span>
+                        </div>
+                    </div>
+                </div>
                 <img class="entity-icon" src="/images/solar-panel-icon.png" />
                 <span class="entity-name">Solar Panel</span>
                 <div class="row entity-properties">
@@ -179,7 +223,7 @@
                     var actionCost = Ogame.Data.ActionCost.UpgradeSolarPanelCost(solarpanel);
                     var canUpgrade = Ogame.Data.ActionCost.CanUpgrade(actionCost, Model._planet);
                 }
-                @if (canUpgrade)
+                @if (canUpgrade && solarpanel.Action.Type != TemporalAction.ActionType.Upgrade)
                 {
                     <a class="upgrade-button" asp-controller="Planets" asp-action="UpgradeSolarPanel" asp-route-id="@solarpanel.SolarPanelID"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
                 }
@@ -246,6 +290,7 @@
     }
 
     .entity-container {
+        position: relative;
         background-color: white;
         color: black;
         padding: 40px 0;
@@ -278,7 +323,7 @@
     .entity-properties {
         position: absolute;
         right: 0;
-        bottom: 20px;
+        bottom: 5px;
         left: 0;
         color: white;
     }
@@ -309,7 +354,7 @@
     .upgrade-button {
         position: absolute;
         top: -5px;
-        right: 0;
+        right: -5px;
         z-index:10;
         background-color: #f57979;
         border-radius: 40px;
@@ -329,9 +374,9 @@
 
     .fight-button {
         position: absolute;
-        bottom: 10px;
+        bottom: -5px;
         z-index: 10;
-        right: 0;
+        right: -5px;
         background-color: white;
         border-radius: 40px;
         padding: 10px;
@@ -366,5 +411,51 @@
 
     .no-margin {
         margin: 0;
+    }
+
+    .caps-container {
+        position: absolute;
+        background-color: #000000d1;
+        color: white;
+        height: 100%;
+        width: 100%;
+        top: 0px;
+        z-index: 10;
+        display: flex;
+        border-radius: 15px;
+        align-items: center;
+        right: 0;
+        justify-content: center;
+        left: 0;
+        width: auto;
+        opacity: 0;
+        transition: visibility 0s, opacity 0.2s linear;
+        visibility: hidden;
+    }
+
+    .entity-container:hover > .caps-container {
+        cursor: help;
+        visibility: visible;
+        opacity: 1;
+        transition: 0.2s visibility 0s, opacity 0.2s linear;
+    }
+
+    .caps-title {
+        display: block;
+        font-size: 18px;
+        font-weight: bold;
+        font-variant: small-caps;
+    }
+
+    .caps-item {
+        display: block;
+        font-variant: small-caps;
+        text-align: left;
+    }
+
+    .center-column {
+        float: none;
+        margin: 0 auto;
+        width: auto;
     }
 </style>
