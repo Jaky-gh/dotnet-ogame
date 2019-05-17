@@ -68,6 +68,7 @@ namespace Ogame.Data
             {
                 Action = action,
                 Level = 0,
+				Energy = 0,
                 ActionID = action.TemporalActionID,
                 Planet = planet,
                 PlanetID = planet.PlanetID,
