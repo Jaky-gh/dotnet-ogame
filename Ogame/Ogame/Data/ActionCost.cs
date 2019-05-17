@@ -19,6 +19,20 @@ namespace Ogame.Data
         private const float _spaceshipEnergyCostRate = 2.0f;
         private const float _defenseEnergyCostRate = 2.0f;
 
+        public static ActionCost createSpaceshipCost()
+        {
+            return new ActionCost
+            {
+                DeuteriumCost = 100,
+                ActionTime = TemporalActionResolver.CycleDuration
+            };
+        }
+
+        public static bool CanCreateSpaceship(ActionCost actionCost, Planet planet)
+        {
+            return planet.Deuterium >= actionCost.DeuteriumCost;
+        }
+
         public static ActionCost UpgradeMineCost(Mine mine)
         {
             ActionCost cost = new ActionCost
