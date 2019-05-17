@@ -104,11 +104,19 @@ namespace Ogame.Controllers
             {
                 return NotFound();
             }
-
+            
             if (ModelState.IsValid)
             {
                 _context.Add(planet);
                 await _context.SaveChangesAsync();
+                
+                DefaultElementsGenerator.CreateDefaultSpaceship(_context, planet);
+                DefaultElementsGenerator.CreateDefaultMine(_context, Mine.Ressources.Metal, planet);
+                DefaultElementsGenerator.CreateDefaultMine(_context, Mine.Ressources.Cristal, planet);
+                DefaultElementsGenerator.CreateDefaultMine(_context, Mine.Ressources.Deuterium, planet);
+                DefaultElementsGenerator.CreateDefaultSolarPanel(_context, planet);
+                DefaultElementsGenerator.CreateDefaultDefense(_context, planet);
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", planet.UserID);
