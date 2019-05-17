@@ -61,7 +61,6 @@ namespace Ogame.Controllers
             {
                 return NotFound();
             }
-
             return View(new Models.SpaceshipView.SpaceshipDetailsViewInterface(spaceship, user));
         }
 
@@ -226,11 +225,31 @@ namespace Ogame.Controllers
                 return NotFound();
             }
 
-            var spaceship = await _context.Spaceships.FindAsync(id);
+            var spaceship = await _context.Spaceships
+               .Include(s => s.Action)
+               .Include(s => s.Caps)
+               .Include(s => s.Planet)
+               .FirstOrDefaultAsync(m => m.SpaceshipID == id);
             if (spaceship == null)
             {
                 return NotFound();
             }
+
+            Random rnd = new Random();
+
+            var dist = rnd.Next(1, (int) (spaceship.Energy / 10) + 1);
+            var x = rnd.Next(0, dist + 1);
+            var y = dist - x;
+
+            x *= rnd.Next(0, 2) == 1 ? 1 : -1;
+            y *= rnd.Next(0, 2) == 1 ? 1 : -1;
+
+            ViewData["planet"] = await PlanetRandomizer.GetExistingOrRandomPlanet(_context, x, y);
+            ViewData["user"] = await GetCurrentUserAsync();
+            ViewData["spaceshipPlanetId"] = spaceship.PlanetID;
+            ViewData["distance"] = dist;
+            ViewData["energyCost"] = 10; //FIXME
+
             return View(new Models.SpaceshipView.SpaceshipAttackInterface());
         }
 

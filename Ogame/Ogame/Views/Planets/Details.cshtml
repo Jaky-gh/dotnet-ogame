@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Planet <" + Model._planet.Name + ">";
-    var user = Model._user;
+    var user = ViewData["user"] as User;
     var canAddSpaceship = Convert.ToBoolean(ViewData["canAddSpaceship"]);
 }
 
@@ -79,22 +79,6 @@
         </div>
     }
 
-    <div class="col-md-4">
-        <div class="entity-container bg-orange">
-            <img class="entity-icon" src="/images/spaceship-icon.png" />
-            <span class="entity-name">Spaceship S-122</span>
-            <div class="row entity-properties">
-                <span class="entity-property">1200 energy</span>
-                <span class="entity-property">Level 2</span>
-            </div>
-            @if (true)//FIXME: check resources
-            {
-                <a class="upgrade-button" asp-controller="Spaceships" asp-action="Edit"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
-            }
-            <a class="fight-button" asp-controller="Spaceships" asp-action="Details"><img class="fight-icon" src="/images/fight-icon.png" /></a>
-        </div>
-    </div>
-
     @foreach (var spaceship in ViewData["spaceships"] as List<Spaceship>)
     {
         <div class="col-md-4">
@@ -109,7 +93,7 @@
                 {
                     <a class="upgrade-button" asp-controller="Spaceships" asp-action="Edit"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
                 }
-                <a class="fight-button" asp-controller="Spaceships" asp-action="Edit"><img class="fight-icon" src="/images/fight-icon.png" /></a>
+                <a class="fight-button" asp-controller="Spaceships" asp-action="Attack" asp-route-id="@spaceship.SpaceshipID"><img class="fight-icon" src="/images/fight-icon.png" /></a>
             </div>
         </div>
     }
@@ -122,7 +106,7 @@
         <div class="col-md-4">
             <div class="entity-container bg-yellow">
                 <img class="entity-icon" src="/images/solar-panel-icon.png" />
-                <span class="entity-name">Spaceship S-@solarpanel.SolarPanelID</span>
+                <span class="entity-name">SolarPanel S-@solarpanel.SolarPanelID</span>
                 <div class="row entity-properties">
                     <span class="entity-property">@solarpanel.CollectRate per 5 min</span>
                     <span class="entity-property">Level @solarpanel.Level</span>
@@ -138,7 +122,7 @@
 
 <style>
     .body-content {
-        padding-top: 10px;
+        padding-top: 20px;
     }
 
     .back-button {

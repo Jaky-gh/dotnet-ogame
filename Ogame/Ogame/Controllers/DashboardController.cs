@@ -28,8 +28,10 @@ namespace Ogame.Controllers
             User user = await GetCurrentUserAsync();
             var applicationDbContext = user.IsAdmin ? _context.Planets.Include(p => p.User) : _context.Planets.Where(p => p.UserID == user.Id).Include(p => p.User);
 
-            ViewData["planets"] = await applicationDbContext.ToListAsync();
+            var planets = await applicationDbContext.ToListAsync();
+            ViewData["planets"] = planets;
             ViewData["user"] = user;
+
             return View();
         }
 

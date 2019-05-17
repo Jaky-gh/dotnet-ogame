@@ -76,6 +76,8 @@ namespace Ogame.Controllers
             ViewData["solarPanels"] = await _context.SolarPanels.Where(p => p.PlanetID == planet.PlanetID).ToListAsync();
             ViewData["spaceships"] = await _context.Spaceships.Where(p => p.PlanetID == planet.PlanetID).ToListAsync();
 
+            ViewData["user"] = await GetCurrentUserAsync();
+
             return View(new Models.PlanetView.PlanetDetailsViewInterface(planet, await GetCurrentUserAsync()));
         }
 
