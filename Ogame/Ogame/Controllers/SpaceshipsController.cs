@@ -238,16 +238,15 @@ namespace Ogame.Controllers
             Random rnd = new Random();
 
             var dist = rnd.Next(1, (int) (spaceship.Energy / 10) + 1);
-            var x = rnd.Next(0, dist + 1);
-            var y = dist - x;
-
-            x *= rnd.Next(0, 2) == 1 ? 1 : -1;
-            y *= rnd.Next(0, 2) == 1 ? 1 : -1;
+            dist *= rnd.Next(0, 2) == 1 ? 1 : -1;
+            var tmpDist = rnd.Next(dist < 0 ? dist : 0, dist < 0 ? 0 : dist);
+            var x = spaceship.Planet.X + tmpDist;
+            var y = spaceship.Planet.Y + (dist - tmpDist);
 
             ViewData["planet"] = await PlanetRandomizer.GetExistingOrRandomPlanet(_context, x, y);
             ViewData["user"] = await GetCurrentUserAsync();
             ViewData["spaceshipPlanetId"] = spaceship.PlanetID;
-            ViewData["distance"] = dist * 4.2;
+            ViewData["distance"] = Math.Abs(dist) * 4.2;
             ViewData["timeCost"] = ActionCost.AttackCost(spaceship, x, y).ActionTime.TotalMinutes;
 
             return View(new Models.SpaceshipView.SpaceshipAttackInterface());

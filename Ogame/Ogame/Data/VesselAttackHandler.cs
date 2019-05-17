@@ -32,7 +32,7 @@ namespace Ogame.Data
             }
             spaceship.Energy -= cost.EnergyCost;
             context.Spaceships.Update(spaceship);
-
+            
             temporalAction.Due_to = DateTime.Now.Add(cost.ActionTime);
             temporalAction.Type = TemporalAction.ActionType.Attack;
             temporalAction.TargetID = planet.PlanetID;
