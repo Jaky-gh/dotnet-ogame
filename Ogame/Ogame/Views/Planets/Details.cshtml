@@ -44,7 +44,7 @@
 <h3>Defenses</h3>
 <div class="row">
     <div class="col-md-3 padding-add-new">
-        <div class="entity-container bg-add-new" onclick="location.href='@Url.Action("Create", "Defense")'">
+        <div class="entity-container bg-add-new" onclick="location.href='@Url.Action("Create", "Defenses")'">
             <img class="entity-icon" src="/images/defense-icon.png" />
             <span class="entity-name">Add New</span>
         </div>
@@ -52,7 +52,7 @@
     @foreach (var defense in ViewData["defenses"] as List<Defense>)
     {
         <div class="col-md-3">
-            <div class="entity-container bg-blue" onclick="location.href='@Url.Action("Details", "Defense", new { id = defense.DefenseID })'">
+            <div class="entity-container bg-blue" onclick="location.href='@Url.Action("Details", "Defenses", new { id = defense.DefenseID })'">
                 <img class="entity-icon" src="/images/defense-icon.png" />
                 <span class="entity-name">Defense D-@defense.DefenseID</span>
                 <div class="row entity-properties">
@@ -67,7 +67,7 @@
 <h3>Spaceships</h3>
 <div class="row">
     <div class="col-md-3 padding-add-new">
-        <div class="entity-container bg-add-new" onclick="location.href='@Url.Action("Create", "Spaceship")'">
+        <div class="entity-container bg-add-new" onclick="location.href='@Url.Action("Create", "Spaceships")'">
             <img class="entity-icon" src="/images/spaceship-icon.png" />
             <span class="entity-name">Add New</span>
         </div>
@@ -75,7 +75,7 @@
     @foreach (var spaceship in ViewData["spaceships"] as List<Spaceship>)
     {
         <div class="col-md-3">
-            <div class="entity-container bg-orange" onclick="location.href='@Url.Action("Details", "Spaceship", new { id = spaceship.SpaceshipID })'">
+            <div class="entity-container bg-orange" onclick="location.href='@Url.Action("Details", "Spaceships", new { id = spaceship.SpaceshipID })'">
                 <img class="entity-icon" src="/images/spaceship-icon.png" />
                 <span class="entity-name">Spaceship S-@spaceship.SpaceshipID</span>
                 <div class="row entity-properties">
@@ -90,7 +90,7 @@
 <h3>Solar Panels</h3>
 <div class="row">
     <div class="col-md-3 padding-add-new">
-        <div class="entity-container bg-add-new" onclick="location.href='@Url.Action("Create", "SolarPanel")'">
+        <div class="entity-container bg-add-new" onclick="location.href='@Url.Action("Create", "SolarPanels")'">
             <img class="entity-icon" src="/images/solar-panel-icon.png" />
             <span class="entity-name">Add New</span>
         </div>
@@ -98,7 +98,7 @@
     @foreach (var solarpanel in ViewData["solarPanels"] as List<SolarPanel>)
     {
         <div class="col-md-3">
-            <div class="entity-container bg-yellow" onclick="location.href='@Url.Action("Details", "SolarPanel", new { id = solarpanel.SolarPanelID })'">
+            <div class="entity-container bg-yellow" onclick="location.href='@Url.Action("Details", "SolarPanels", new { id = solarpanel.SolarPanelID })'">
                 <img class="entity-icon" src="/images/solar-panel-icon.png" />
                 <span class="entity-name">Spaceship S-@solarpanel.SolarPanelID</span>
                 <div class="row entity-properties">
