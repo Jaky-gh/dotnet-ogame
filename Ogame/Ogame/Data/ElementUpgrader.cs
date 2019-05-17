@@ -94,5 +94,12 @@ namespace Ogame.Data
                     && UpdatePlanet(context, spaceship.Planet, actionCost)
                     && UpdateTemporalAction(context, spaceship.Action, actionCost));
         }
+
+        public static bool addSpaceship(ApplicationDbContext context, Planet planet)
+        {
+            ActionCost actionCost = ActionCost.createSpaceshipCost();
+            return ActionCost.CanCreateSpaceship(actionCost, planet)
+                && AddSpaceship(context, planet, actionCost);
+        }
     }
 }
