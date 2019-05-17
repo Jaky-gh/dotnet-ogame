@@ -103,7 +103,7 @@ namespace Ogame.Data
                 MetalCost = 0,
                 EnergyCost = dist * 10,
                 ActionTime = (dist / spaceship.Level + 1) * TemporalActionResolver.CycleDuration
-            }
+            };
         }
 
         public static bool CanAttack (ActionCost actionCost, Spaceship spaceship)
