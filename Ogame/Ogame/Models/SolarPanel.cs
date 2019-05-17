@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Ogame.Models
 {
-    public class SolarPanel : IActionHolder
+    public class SolarPanel : IHolderWithProduction
     {
         public int SolarPanelID { get; set; }
         public Planet Planet { get; set; }
