@@ -260,6 +260,7 @@ namespace Ogame.Controllers
             var mine = await _context.Mines
                 .Include(s => s.Caps)
                 .Include(s => s.Planet)
+                .Include(s => s.Planet.User)
                 .Include(s => s.Action)
                 .FirstOrDefaultAsync(m => m.MineID == id);
             if (mine == null)
@@ -277,6 +278,7 @@ namespace Ogame.Controllers
             var defense = await _context.Defenses
                 .Include(s => s.Caps)
                 .Include(s => s.Planet)
+                .Include(s => s.Planet.User)
                 .Include(s => s.Action)
                 .FirstOrDefaultAsync(m => m.DefenseID == id);
             if (defense == null)
@@ -294,6 +296,7 @@ namespace Ogame.Controllers
             var solarpanel = await _context.SolarPanels
                 .Include(s => s.Caps)
                 .Include(s => s.Planet)
+                .Include(s => s.Planet.User)
                 .Include(s => s.Action)
                 .FirstOrDefaultAsync(m => m.SolarPanelID == id);
             if (solarpanel == null)
@@ -311,6 +314,7 @@ namespace Ogame.Controllers
             var spaceship = await _context.Spaceships
                 .Include(s => s.Caps)
                 .Include(s => s.Planet)
+                .Include(s => s.Planet.User)
                 .Include(s => s.Action)
                 .FirstOrDefaultAsync(m => m.SpaceshipID == id);
             if (spaceship == null)

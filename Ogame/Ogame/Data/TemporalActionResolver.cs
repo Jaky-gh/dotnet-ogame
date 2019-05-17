@@ -50,8 +50,9 @@ namespace Ogame.Data
                     {
                         if (actionHolder.Action.Target.UserID == null)
                         {
-                            actionHolder.Action.Target.UserID = actionHolder.Planet.UserID;
-                            context.Planets.Update(actionHolder.Action.Target);
+                            actionHolder.Planet.User.Planets.Add(actionHolder.Action.Target);
+                            actionHolder.Planet.User.Score += 1;
+                            context.Users.Update(actionHolder.Planet.User);
                         }
                         else
                         {
@@ -216,6 +217,8 @@ namespace Ogame.Data
             Spaceship[] VesselList = context.Spaceships
                 .Include(m => m.Planet)
                 .Where(m => m.Planet.UserID == userId)
+                .Include(m => m.Planet.User)
+                .Include(m => m.Planet.User.Planets)
                 .Include(m => m.Action)
                 .Where(m => m.Action != null && m.Action.Due_to < now)
                 .Include(m => m.Caps)
