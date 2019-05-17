@@ -26,7 +26,23 @@ namespace Ogame.Controllers
         public async Task<IActionResult> Index()
         {
             User user = await GetCurrentUserAsync();
+            TemporalActionResolver.HandleTemoralActionForUserUntil(_context, user.Id);
             var applicationDbContext = user.IsAdmin ? _context.Planets.Include(p => p.User) : _context.Planets.Where(p => p.UserID == user.Id).Include(p => p.User);
+
+            if (!_context.Planets.Any(e => e.UserID == user.Id))
+            {
+                Planet planet = await PlanetRandomizer.FindPlanetForNewPlayer(_context);
+                planet.User = user;
+                if (planet.PlanetID != 0)
+                {
+                    _context.Planets.Update(planet);
+                }
+                else
+                {
+                    _context.Planets.Add(planet);
+                }
+                await _context.SaveChangesAsync();
+            }
 
             var planets = await applicationDbContext.ToListAsync();
             ViewData["planets"] = planets;

@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "Planet <" + Model._planet.Name + ">";
     var user = ViewData["user"] as User;
-    var canAddSpaceship = Convert.ToBoolean(ViewData["canAddSpaceship"]);
 }
 
 <a asp-controller="Dashboard" asp-action="" class="back-button">
@@ -37,9 +36,13 @@
                     <span class="entity-property">@mine.CollectRate per 5 min</span>
                     <span class="entity-property">Level @mine.Level</span>
                 </div>
-                @if (true)//FIXME: check resources
+                @{
+                    var actionCost = Ogame.Data.ActionCost.UpgradeMineCost(mine);
+                    var canUpgrade = Ogame.Data.ActionCost.CanUpgrade(actionCost, Model._planet);
+                }
+                @if (canUpgrade)
                 {
-                    <a class="upgrade-button" asp-controller="Mine" asp-action="Edit"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
+                    <a class="upgrade-button" asp-controller="Planets" asp-action="UpgradeMine" asp-route-id="@mine.MineID"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
                 }
             </div>
         </div>
@@ -58,10 +61,15 @@
                     <span class="entity-property">@defense.Energy energy</span>
                     <span class="entity-property">Level @defense.Level</span>
                 </div>
-                @if (true)//FIXME: check resources
-                {
-                    <a class="upgrade-button" asp-controller="Defenses" asp-action="Edit"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
+                @{
+                    var actionCost = Ogame.Data.ActionCost.UpgradeDefenseActionCost(defense);
+                    var canUpgrade = Ogame.Data.ActionCost.CanUpgrade(actionCost, Model._planet);
                 }
+                @if (canUpgrade)
+                {
+                    <a class="upgrade-button" asp-controller="Planets" asp-action="UpgradeDefense" asp-route-id="@defense.DefenseID"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
+                }
+
             </div>
         </div>
     }
@@ -69,10 +77,14 @@
 
 <h3>Spaceships</h3>
 <div class="row">
+    @{
+        var canAddSpaceship = true;
+    }
+
     @if (canAddSpaceship)
     {
         <div class="col-md-4 padding-add-new">
-            <div class="entity-container bg-add-new" onclick="location.href='@Url.Action("Create", "Spaceships")'">
+            <div class="entity-container entity-container-hover" onclick="location.href='@Url.Action("Create", "Spaceships")'">
                 <img class="entity-icon" src="/images/spaceship-icon.png" />
                 <span class="entity-name">Add New</span>
             </div>
@@ -89,11 +101,18 @@
                     <span class="entity-property">@spaceship.Energy energy</span>
                     <span class="entity-property">Level @spaceship.Level</span>
                 </div>
-                @if (true)//FIXME: check resources
-                {
-                    <a class="upgrade-button" asp-controller="Spaceships" asp-action="Edit"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
+                @{
+                    var actionCost = Ogame.Data.ActionCost.UpgradeSpaceshipActionCost(spaceship);
+                    var canUpgrade = Ogame.Data.ActionCost.CanUpgrade(actionCost, Model._planet);
                 }
-                <a class="fight-button" asp-controller="Spaceships" asp-action="Attack" asp-route-id="@spaceship.SpaceshipID"><img class="fight-icon" src="/images/fight-icon.png" /></a>
+                @if (canUpgrade)
+                {
+                    <a class="upgrade-button" asp-controller="Planets" asp-action="UpgradeSpaceship" asp-route-id="@spaceship.SpaceshipID"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
+                }
+                @if (spaceship.Level > 0)
+                {
+                    <a class="fight-button" asp-controller="Spaceships" asp-action="Attack" asp-route-id="@spaceship.SpaceshipID"><img class="fight-icon" src="/images/fight-icon.png" /></a>
+                }
             </div>
         </div>
     }
@@ -111,9 +130,13 @@
                     <span class="entity-property">@solarpanel.CollectRate per 5 min</span>
                     <span class="entity-property">Level @solarpanel.Level</span>
                 </div>
-                @if (true)//FIXME: check resources
+                @{
+                    var actionCost = Ogame.Data.ActionCost.UpgradeSolarPanelCost(solarpanel);
+                    var canUpgrade = Ogame.Data.ActionCost.CanUpgrade(actionCost, Model._planet);
+                }
+                @if (canUpgrade)
                 {
-                    <a class="upgrade-button" asp-controller="SolarPanels" asp-action="Edit"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
+                    <a class="upgrade-button" asp-controller="Planets" asp-action="UpgradeSolarPanel" asp-route-id="@solarpanel.SolarPanelID"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
                 }
             </div>
         </div>
@@ -186,6 +209,13 @@
         box-shadow: #000000 0px 0px 6px -1px;
         transition: all 200ms ease;
         margin-bottom: 10px;
+    }
+
+    .entity-container-hover:hover {
+        background-color: black;
+        color: white;
+        transition: all 200ms ease;
+        cursor: pointer;
     }
 
     .entity-icon {
