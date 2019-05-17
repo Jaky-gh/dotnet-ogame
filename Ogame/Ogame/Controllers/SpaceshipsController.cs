@@ -247,7 +247,7 @@ namespace Ogame.Controllers
             ViewData["user"] = await GetCurrentUserAsync();
             ViewData["spaceshipPlanetId"] = spaceship.PlanetID;
             ViewData["distance"] = Math.Abs(dist) * 4.2;
-            ViewData["timeCost"] = ActionCost.AttackCost(spaceship, x, y).ActionTime.TotalMinutes;
+            ViewData["timeCost"] = ActionCost.AttackCost(spaceship, x, y).ActionTime;
 
             return View(new Models.SpaceshipView.SpaceshipAttackInterface());
         }

@@ -4,6 +4,7 @@
     ViewData["Title"] = "Attack";
     var user = ViewData["user"] as User;
     var planet = ViewData["planet"] as Planet;
+    TimeSpan duration = (TimeSpan) ViewData["timeCost"];
 }
 
 <a asp-controller="Planets" asp-action="Details" asp-route-id="@ViewData["spaceshipPlanetId"]" class="back-button">
@@ -13,12 +14,12 @@
 
 <h2>Attack on Random planet:</h2>
 
-<div class="row">
+<div class="row" style="padding: 0 20px;">
     <div class="col-md-5 planet-container">
         <img class="planet-icon" src="/images/planet-icon.png" />
         <span class="planet-name">@planet.Name</span>
         <div class="row">
-            <span class="col description">Distance: @ViewData["distance"] AL | Duration: @ViewData["timeCost"] minutes</span>
+            <span class="col description">Distance: @ViewData["distance"] AL | Duration: @duration.Minutes min @duration.Seconds sec</span>
         </div>
         <div class="row" style="margin: 20px 0;">
             @if (planet.UserID != null)
