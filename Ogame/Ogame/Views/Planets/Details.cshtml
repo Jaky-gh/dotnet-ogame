@@ -84,13 +84,14 @@
 <h3>Spaceships</h3>
 <div class="row">
     @{
-        var canAddSpaceship = true;
+        var actioncost = Ogame.Data.ActionCost.createSpaceshipCost();
+        var canAddSpaceship = Ogame.Data.ActionCost.CanCreateSpaceship(actioncost, Model._planet);
     }
 
     @if (canAddSpaceship)
     {
         <div class="col-md-4 padding-add-new">
-            <div class="entity-container entity-container-hover" onclick="location.href='@Url.Action("Create", "Spaceships")'">
+            <div class="entity-container entity-container-hover" onclick="location.href='@Url.Action("CreateSpaceship", "Planets", new { id = Model._planet.PlanetID })'">
                 <img class="entity-icon" src="/images/spaceship-icon.png" />
                 <span class="entity-name">Add New</span>
             </div>

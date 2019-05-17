@@ -332,5 +332,18 @@ namespace Ogame.Controllers
                 Console.WriteLine("Spaceship Upgrade Failed");
             return RedirectToAction("Details", new { id = spaceship.PlanetID });
         }
+
+       /*public async Task<IActionResult> CreateSpaceship(int? id)
+        {
+            var planet = await _context.Planets.Include(s => s.Spaceships).FirstOrDefaultAsync(p => p.PlanetID == id);
+            if (planet == null)
+            {
+                return NotFound();
+            }
+
+
+
+            return RedirectToAction("Details", new { id = spaceship.PlanetID });
+        }*/
     }
 }
