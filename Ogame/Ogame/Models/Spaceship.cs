@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Ogame.Models
 {
-    public class Spaceship : IActionHolder
+    public class Spaceship : IHolderWithEnergy
     {
         public int SpaceshipID { get; set; }
         public int PlanetID { get; set; }
