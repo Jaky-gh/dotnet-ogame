@@ -92,5 +92,23 @@ namespace Ogame.Data
                    && (planet.Deuterium >= actionCost.DeuteriumCost)
                    && (planet.Energy >= actionCost.EnergyCost);
         }
+
+        public static ActionCost AttackCost(Spaceship spaceship, int X, int Y)
+        {
+            int dist = Math.Abs(spaceship.Planet.X - X) + Math.Abs(spaceship.Planet.Y - Y);
+            return new ActionCost
+            {
+                CristalCost = 0,
+                DeuteriumCost = 0,
+                MetalCost = 0,
+                EnergyCost = dist * 10,
+                ActionTime = (dist / spaceship.Level + 1) * TemporalActionResolver.CycleDuration
+            }
+        }
+
+        public static bool CanAttack (ActionCost actionCost, Spaceship spaceship)
+        {
+            return actionCost.EnergyCost <= spaceship.Energy;
+        }
     }
 }
