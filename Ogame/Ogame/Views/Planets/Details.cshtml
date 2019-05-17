@@ -3,12 +3,19 @@
 @{
     ViewData["Title"] = "Planet <" + Model._planet.Name + ">";
     var user = Model._user;
+    var canAddSpaceship = Convert.ToBoolean(ViewData["canAddSpaceship"]);
 }
+
+<a asp-controller="Dashboard" asp-action="" class="back-button">
+    <img class="back-icon" src="/images/back-icon.png" />
+    Back to Planets
+</a>
 
 <div class="planet-container">
     <h2>
         @Html.DisplayFor(model => model._planet.Name)
     </h2>
+    <p class="dist-star">Star: @Html.DisplayFor(model => model._planet.Dist_to_star) millions km</p>
 
     <div class="row planet-resources">
         <span class="col planet-resources-item"><b>Cristal:</b> @Html.DisplayFor(model => model._planet.Cristal)</span>
@@ -20,45 +27,41 @@
 
 <h3>Mines</h3>
 <div class="row">
-    <div class="col-md-3 padding-add-new">
-        <div class="entity-container bg-add-new" onclick="location.href='@Url.Action("Create", "Mine")'">
-            <img class="entity-icon" src="/images/mine-icon.png" />
-            <span class="entity-name">Add New</span>
-        </div>
-    </div>
     @foreach (var mine in ViewData["mines"] as List<Mine>)
     {
-        <div class="col-md-3">
-            <div class="entity-container" onclick="location.href='@Url.Action("Details", "Mine", new { id = mine.MineID })'">
+        <div class="col-md-4">
+            <div class="entity-container">
                 <img class="entity-icon" src="/images/mine-icon.png" />
                 <span class="entity-name">@mine.Ressource</span>
                 <div class="row entity-properties">
-                    <span class="entity-property">@mine.Collect_rate/s</span>
+                    <span class="entity-property">@mine.Collect_rate per 5 min</span>
                     <span class="entity-property">Level @mine.Level</span>
                 </div>
+                @if (true)//FIXME: check resources
+                {
+                    <a class="upgrade-button" asp-controller="Mine" asp-action="Edit"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
+                }
             </div>
         </div>
     }
 </div>
 
-<h3>Defenses</h3>
+<h3>Defense</h3>
 <div class="row">
-    <div class="col-md-3 padding-add-new">
-        <div class="entity-container bg-add-new" onclick="location.href='@Url.Action("Create", "Defenses")'">
-            <img class="entity-icon" src="/images/defense-icon.png" />
-            <span class="entity-name">Add New</span>
-        </div>
-    </div>
     @foreach (var defense in ViewData["defenses"] as List<Defense>)
     {
-        <div class="col-md-3">
-            <div class="entity-container bg-blue" onclick="location.href='@Url.Action("Details", "Defenses", new { id = defense.DefenseID })'">
+        <div class="col-md-4">
+            <div class="entity-container bg-blue">
                 <img class="entity-icon" src="/images/defense-icon.png" />
                 <span class="entity-name">Defense D-@defense.DefenseID</span>
                 <div class="row entity-properties">
                     <span class="entity-property">@defense.Energy energy</span>
                     <span class="entity-property">Level @defense.Level</span>
                 </div>
+                @if (true)//FIXME: check resources
+                {
+                    <a class="upgrade-button" asp-controller="Defenses" asp-action="Edit"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
+                }
             </div>
         </div>
     }
@@ -66,51 +69,99 @@
 
 <h3>Spaceships</h3>
 <div class="row">
-    <div class="col-md-3 padding-add-new">
-        <div class="entity-container bg-add-new" onclick="location.href='@Url.Action("Create", "Spaceships")'">
+    @if (canAddSpaceship)
+    {
+        <div class="col-md-4 padding-add-new">
+            <div class="entity-container bg-add-new" onclick="location.href='@Url.Action("Create", "Spaceships")'">
+                <img class="entity-icon" src="/images/spaceship-icon.png" />
+                <span class="entity-name">Add New</span>
+            </div>
+        </div>
+    }
+
+    <div class="col-md-4">
+        <div class="entity-container bg-orange">
             <img class="entity-icon" src="/images/spaceship-icon.png" />
-            <span class="entity-name">Add New</span>
+            <span class="entity-name">Spaceship S-122</span>
+            <div class="row entity-properties">
+                <span class="entity-property">1200 energy</span>
+                <span class="entity-property">Level 2</span>
+            </div>
+            @if (true)//FIXME: check resources
+            {
+                <a class="upgrade-button" asp-controller="Spaceships" asp-action="Edit"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
+            }
+            <a class="fight-button" asp-controller="Spaceships" asp-action="Details"><img class="fight-icon" src="/images/fight-icon.png" /></a>
         </div>
     </div>
+
     @foreach (var spaceship in ViewData["spaceships"] as List<Spaceship>)
     {
-        <div class="col-md-3">
-            <div class="entity-container bg-orange" onclick="location.href='@Url.Action("Details", "Spaceships", new { id = spaceship.SpaceshipID })'">
+        <div class="col-md-4">
+            <div class="entity-container bg-orange">
                 <img class="entity-icon" src="/images/spaceship-icon.png" />
                 <span class="entity-name">Spaceship S-@spaceship.SpaceshipID</span>
                 <div class="row entity-properties">
                     <span class="entity-property">@spaceship.Energy energy</span>
                     <span class="entity-property">Level @spaceship.Level</span>
                 </div>
+                @if (true)//FIXME: check resources
+                {
+                    <a class="upgrade-button" asp-controller="Spaceships" asp-action="Edit"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
+                }
+                <a class="fight-button" asp-controller="Spaceships" asp-action="Edit"><img class="fight-icon" src="/images/fight-icon.png" /></a>
             </div>
         </div>
     }
 </div>
 
-<h3>Solar Panels</h3>
+<h3>Solar Panel</h3>
 <div class="row">
-    <div class="col-md-3 padding-add-new">
-        <div class="entity-container bg-add-new" onclick="location.href='@Url.Action("Create", "SolarPanels")'">
-            <img class="entity-icon" src="/images/solar-panel-icon.png" />
-            <span class="entity-name">Add New</span>
-        </div>
-    </div>
     @foreach (var solarpanel in ViewData["solarPanels"] as List<SolarPanel>)
     {
-        <div class="col-md-3">
-            <div class="entity-container bg-yellow" onclick="location.href='@Url.Action("Details", "SolarPanels", new { id = solarpanel.SolarPanelID })'">
+        <div class="col-md-4">
+            <div class="entity-container bg-yellow">
                 <img class="entity-icon" src="/images/solar-panel-icon.png" />
                 <span class="entity-name">Spaceship S-@solarpanel.SolarPanelID</span>
                 <div class="row entity-properties">
-                    <span class="entity-property">@solarpanel.Collect_rate/s</span>
+                    <span class="entity-property">@solarpanel.Collect_rate per 5 min</span>
                     <span class="entity-property">Level @solarpanel.Level</span>
                 </div>
+                @if (true)//FIXME: check resources
+                {
+                    <a class="upgrade-button" asp-controller="SolarPanels" asp-action="Edit"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
+                }
             </div>
         </div>
     }
 </div>
 
 <style>
+    .body-content {
+        padding-top: 10px;
+    }
+
+    .back-button {
+        color: black;
+        background-color: white;
+        padding: 10px 8px;
+        border-radius: 10px;
+        font-size: 20px;
+        font-weight: 100;
+        transition: all 100ms ease;
+    }
+
+    .back-button:hover {
+        transition: all 100ms ease;
+        color: black;
+        font-weight: bold;
+        text-decoration: none;
+    }
+
+    .back-icon {
+        height: 50px;
+    }
+
     .planet-container {
         background: linear-gradient(45deg,#e25d5e, #d7addeb0);
         padding: 45px 0;
@@ -119,7 +170,7 @@
         box-shadow: #000000 0px 0px 6px -1px;
         transition: all 300ms ease;
         margin-bottom: 20px;
-        margin-top: 20px;
+        margin-top: 10px;
         position: relative;
     }
 
@@ -137,6 +188,11 @@
         border-radius: 6px;
     }
 
+    .dist-star {
+        font-weight: 100;
+        font-size: 18px;
+    }
+
     .entity-container {
         background-color: white;
         color: black;
@@ -147,13 +203,6 @@
         transition: all 200ms ease;
         margin-bottom: 10px;
     }
-
-        .entity-container:hover {
-            cursor: pointer;
-            transition: all 200ms ease;
-            background-color: #4e4d4d;
-            color: white;
-        }
 
     .entity-icon {
         height: 50px;
@@ -179,6 +228,46 @@
         background-color: #292929;
         padding: 2px 4px;
         border-radius: 6px;
+    }
+
+    .upgrade-button {
+        position: absolute;
+        top: -20px;
+        right: 0;
+        background-color: #f57979;
+        border-radius: 40px;
+        padding: 2px;
+        box-shadow: black 0px 0px 5px 0px;
+        transition: all 500ms ease;
+    }
+
+    .upgrade-button:hover {
+        transition: all 500ms ease;
+        border-radius: 10px;
+    }
+
+    .upgrade-icon {
+        height: 50px;
+    }
+
+    .fight-button {
+        position: absolute;
+        bottom: -12px;
+        right: 0;
+        background-color: white;
+        border-radius: 40px;
+        padding: 10px;
+        box-shadow: black 0px 0px 5px 0px;
+        transition: all 500ms ease;
+    }
+
+    .fight-button:hover {
+        transition: all 500ms ease;
+        border-radius: 10px;
+    }
+
+    .fight-icon {
+        height: 35px;
     }
 
     .bg-blue {

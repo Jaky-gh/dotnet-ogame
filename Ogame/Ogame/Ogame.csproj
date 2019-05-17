@@ -36,6 +36,13 @@
     <Content Remove="wwwroot\images\solar-panel-icon.png" />
     <Content Remove="wwwroot\images\spaceship-icon.png" />
     <Content Remove="wwwroot\images\defense-icon.png" />
+    <Content Remove="wwwroot\images\icons8-arrière-52.png" />
+    <Content Remove="wwwroot\images\icons8-gauche-240.png" />
+    <Content Remove="wwwroot\images\back-icon.png" />
+    <Content Remove="wwwroot\images\icons8-acheter-la-mise-à-niveau-filled-50.png" />
+    <Content Remove="wwwroot\images\upgrade-icon.png" />
+    <Content Remove="wwwroot\images\icons8-bataille-filled-50.png" />
+    <Content Remove="wwwroot\images\fight-icon.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="Views\Spaceships\Attack.cshtml">
