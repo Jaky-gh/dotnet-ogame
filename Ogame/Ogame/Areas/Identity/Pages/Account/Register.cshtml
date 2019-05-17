@@ -2,36 +2,100 @@
 @model RegisterModel
 @{
     ViewData["Title"] = "Register";
+    ViewData["hideNavBar"] = true;
+    ViewData["hideFooter"] = true;
 }
 
-<h2>@ViewData["Title"]</h2>
-
-<div class="row">
-    <div class="col-md-4">
-        <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h4>Create a new account.</h4>
-            <hr />
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Input.Email"></label>
-                <input asp-for="Input.Email" class="form-control" />
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+<div class="register-container">
+<div class="row w-100">
+        <form asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-container">
+            <h2 class="text-white text-center">Create a new account</h4>
+            <div asp-validation-summary="All" class="text-white"></div>
+            <div class="form-group input-group">
+                <input placeholder="Email" asp-for="Input.Email" class="form-control" />
+                <span asp-validation-for="Input.Email" class="text-white"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Input.Password"></label>
-                <input asp-for="Input.Password" class="form-control" />
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            <div class="form-group input-group">
+                <input placeholder="Password" asp-for="Input.Password" class="form-control" />
+                <span asp-validation-for="Input.Password" class="text-white"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Input.ConfirmPassword"></label>
-                <input asp-for="Input.ConfirmPassword" class="form-control" />
-                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            <div class="form-group input-group">
+                <input placeholder="Confirm Password" asp-for="Input.ConfirmPassword" class="form-control" />
+                <span asp-validation-for="Input.ConfirmPassword" class="text-white"></span>
             </div>
-            <button type="submit" class="btn btn-default">Register</button>
+            <button type="submit" class="register-button btn btn-secondary btn-lg">Register</button>
         </form>
-    </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+
+<style>
+html, body {
+  height: 100%;
+  padding: 0;
+}
+
+body {
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.1)), url(/images/home_bg.jpg);
+}
+
+.container {
+  height: 100%;
+}
+
+.register-container {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.button-group {
+  text-align: center;
+} 
+
+.register-button {
+  font-size: 20px;
+  padding: 7px 60px;
+  background-color: black;
+  color: white;
+  font-variant: small-caps;
+  transition: all 1s cubic-bezier(0,-0.34, 0, 0.97);
+  border: 1px solid transparent;
+  border-radius: 6px;
+}
+
+.register-button:hover {
+  color: white;
+  background-color: black;
+  transition: all 1s ease;
+  padding: 7px 100px;
+}
+
+.input-group {
+  width: 300px;
+}
+
+.form-control {
+  font-size: 18px;
+  height: 45px;
+  border-radius: 4px;
+}
+
+.text-white {
+  color: white;
+}
+
+.w-100 {
+  width: 100%;
+}
+</style>

@@ -48,7 +48,7 @@ namespace Ogame.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            return View(new Models.PlanetView.PlanetIndexViewInterface(await applicationDbContext.ToListAsync(), user));
+            return RedirectToAction("Index", "Dashboard");
         }
 
         // GET: Planets/Details/5
@@ -70,6 +70,11 @@ namespace Ogame.Controllers
             {
                 return NotFound();
             }
+
+            ViewData["mines"] = await _context.Mines.Where(p => p.PlanetID == planet.PlanetID).ToListAsync();
+            ViewData["defenses"] = await _context.Defenses.Where(p => p.PlanetID == planet.PlanetID).ToListAsync();
+            ViewData["solarPanels"] = await _context.SolarPanels.Where(p => p.PlanetID == planet.PlanetID).ToListAsync();
+            ViewData["spaceships"] = await _context.Spaceships.Where(p => p.PlanetID == planet.PlanetID).ToListAsync();
 
             return View(new Models.PlanetView.PlanetDetailsViewInterface(planet, await GetCurrentUserAsync()));
         }
