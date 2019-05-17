@@ -184,6 +184,9 @@ namespace Ogame.Data
         {
             if (now == null)
                 now = DateTime.Now;
+			
+			if (userId == null)
+				return;
 
             Mine[] Minelist = context.Mines
                 .Include(m => m.Planet)
@@ -199,8 +202,7 @@ namespace Ogame.Data
                 .Where(m => m.Planet.UserID == userId)
                 .Include(m => m.Action)
                 .Where(m => m.Action != null && m.Action.Due_to < now)
-                                .Include(m => m.Caps)
-
+                .Include(m => m.Caps)
                 .OrderBy(m => m.Action.Due_to)
                 .ToArray();
 
@@ -237,6 +239,7 @@ namespace Ogame.Data
 
             Spaceship[] ennemyVessels = context.Spaceships
                 .Include(m => m.Action)
+				.Include(m => m.Caps)
                 .Where(m => m.Action != null)
                 .Include(m => m.Action.Target)
                 .Where(m => m.Action.Target.UserID == userId)
