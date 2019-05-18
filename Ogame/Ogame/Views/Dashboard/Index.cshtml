@@ -10,8 +10,6 @@
 
     @foreach (var planet in ViewData["planets"] as List<Planet>)
     {
-
-        //add random gradient according to x/z
         <div class="col-md-4">
             <div class="planet-container" onclick="location.href='@Url.Action("Details", "Planets", new { id = planet.PlanetID })'">
                 <img class="planet-icon" src="/images/planet-icon.png" />

@@ -17,10 +17,10 @@
     <p class="dist-star">@Math.Round((decimal)Model._planet.Dist_to_star, 1) millions km from Star</p>
 
     <div class="row planet-resources">
-        <span class="col planet-resources-item"><b>Cristal:</b> @Math.Round(Model._planet.Cristal)</span>
-        <span class="col planet-resources-item"><b>Metal:</b> @Math.Round(Model._planet.Metal)</span>
-        <span class="col planet-resources-item"><b>Deut:</b> @Math.Round(Model._planet.Deuterium)</span>
-        <span class="col planet-resources-item"><b>Energy:</b> @Math.Round(Model._planet.Energy)</span>
+        <span class="col planet-resources-item"><b>Cristal:</b> @Math.Round(Model._planet.Cristal, 1)</span>
+        <span class="col planet-resources-item"><b>Metal:</b> @Math.Round(Model._planet.Metal, 1)</span>
+        <span class="col planet-resources-item"><b>Deut:</b> @Math.Round(Model._planet.Deuterium, 1)</span>
+        <span class="col planet-resources-item"><b>Energy:</b> @Math.Round(Model._planet.Energy, 1)</span>
     </div>
 </div>
 
@@ -44,7 +44,7 @@
                 <img class="entity-icon" src="/images/mine-icon.png" />
                 <span class="entity-name">@mine.Ressource</span>
                 <div class="row entity-properties">
-                    <span class="entity-property">@Math.Round(mine.CollectRate) per @Ogame.Data.TemporalActionResolver.CycleDuration.TotalMinutes min</span>
+                    <span class="entity-property">@Math.Round(mine.CollectRate, 1) per @Math.Round(Ogame.Data.TemporalActionResolver.CycleDuration.TotalMinutes) min</span>
                     <span class="entity-property">Level @mine.Level</span>
                 </div>
                 <div class="row entity-status-container">
@@ -206,7 +206,7 @@
                 <img class="entity-icon" src="/images/solar-panel-icon.png" />
                 <span class="entity-name">Solar Panel</span>
                 <div class="row entity-properties">
-                    <span class="entity-property">@Math.Round(solarpanel.CollectRate) per @Ogame.Data.TemporalActionResolver.CycleDuration.TotalMinutes min</span>
+                    <span class="entity-property">@Math.Round(solarpanel.CollectRate, 1) per @Math.Round(Ogame.Data.TemporalActionResolver.CycleDuration.TotalMinutes) min</span>
                     <span class="entity-property">Level @solarpanel.Level</span>
                 </div>
                 <div class="row entity-status-container">

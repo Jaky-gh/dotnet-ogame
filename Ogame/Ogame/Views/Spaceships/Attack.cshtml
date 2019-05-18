@@ -15,11 +15,12 @@
 <h2>Attack on Random planet:</h2>
 
 <div class="row" style="padding: 0 20px;">
-    <div class="col-md-5 planet-container">
+    <div class="col-md-8 planet-container">
         <img class="planet-icon" src="/images/planet-icon.png" />
         <span class="planet-name">@planet.Name</span>
         <div class="row">
-            <span class="col description">Distance: @ViewData["distance"] AL | Duration: @duration.Minutes min @duration.Seconds sec</span>
+            <span class="col description">Distance: @ViewData["distance"] AL | Duration: @duration.Minutes min @duration.Seconds sec
+            <span style="display: block;">Distance from its Star: @Math.Round((decimal)planet.Dist_to_star, 1) millions km </span></span>
         </div>
         <div class="row" style="margin: 20px 0;">
             @if (planet.UserID != null)

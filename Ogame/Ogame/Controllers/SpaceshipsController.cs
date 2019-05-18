@@ -246,7 +246,7 @@ namespace Ogame.Controllers
             ViewData["planet"] = await PlanetRandomizer.GetExistingOrRandomPlanet(_context, x, y);
             ViewData["user"] = await GetCurrentUserAsync();
             ViewData["spaceshipPlanetId"] = spaceship.PlanetID;
-            ViewData["distance"] = Math.Abs(dist) * 4.2;
+            ViewData["distance"] = Math.Round(Math.Abs(dist) * 4.2, 1);
             ViewData["timeCost"] = ActionCost.AttackCost(spaceship, x, y).ActionTime;
 
             return View(new Models.SpaceshipView.SpaceshipAttackInterface());
