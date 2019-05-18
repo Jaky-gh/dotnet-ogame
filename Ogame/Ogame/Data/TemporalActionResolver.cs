@@ -88,6 +88,12 @@ namespace Ogame.Data
                     actionHolder.Caps.Growth_factor *= 1.2f;
                     context.Caps.Update(actionHolder.Caps);
                     context.Update(actionHolder);
+                    if (actionHolder is Mine || actionHolder is SolarPanel)
+                    {
+                        actionHolder.Action.Type = TemporalAction.ActionType.Production;
+                        actionHolder.Action.Due_to = actionHolder.Action.Due_to.Add(CycleDuration);
+                        context.Actions.Update(actionHolder.Action);
+                    }
                     break;
                 case TemporalAction.ActionType.Idle:
                     if (actionHolder is IHolderWithEnergy)
