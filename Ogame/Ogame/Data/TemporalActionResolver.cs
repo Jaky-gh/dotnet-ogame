@@ -99,7 +99,7 @@ namespace Ogame.Data
                     if (actionHolder is IHolderWithEnergy)
                     {
                         TimeSpan interval = until - actionHolder.Action.Due_to;
-                        int numCycle = (int)(interval / CycleDuration);
+                        int numCycle = (int)(interval / CycleDuration) + 1;
                         if (numCycle > 0)
                         {
                             float energy = MathF.Min(MathF.Min(
