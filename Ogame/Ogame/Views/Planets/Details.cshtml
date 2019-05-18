@@ -44,7 +44,7 @@
                 <img class="entity-icon" src="/images/mine-icon.png" />
                 <span class="entity-name">@mine.Ressource</span>
                 <div class="row entity-properties">
-                    <span class="entity-property">@Math.Round(mine.CollectRate) per 5 min</span>
+                    <span class="entity-property">@Math.Round(mine.CollectRate) per @Ogame.Data.TemporalActionResolver.CycleDuration.TotalMinutes min</span>
                     <span class="entity-property">Level @mine.Level</span>
                 </div>
                 <div class="row entity-status-container">
@@ -206,7 +206,7 @@
                 <img class="entity-icon" src="/images/solar-panel-icon.png" />
                 <span class="entity-name">Solar Panel</span>
                 <div class="row entity-properties">
-                    <span class="entity-property">@Math.Round(solarpanel.CollectRate) per 5 min</span>
+                    <span class="entity-property">@Math.Round(solarpanel.CollectRate) per @Ogame.Data.TemporalActionResolver.CycleDuration.TotalMinutes min</span>
                     <span class="entity-property">Level @solarpanel.Level</span>
                 </div>
                 <div class="row entity-status-container">
