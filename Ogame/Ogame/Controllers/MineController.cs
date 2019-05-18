@@ -25,7 +25,8 @@ namespace Ogame.Controllers
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Mines.Include(m => m.Action).Include(m => m.Caps).Include(m => m.Planet);
-            return View(await applicationDbContext.ToListAsync());
+            return RedirectToAction("Index", "Dashboard");
+
         }
 
         // GET: Mine/Details/5
@@ -46,7 +47,8 @@ namespace Ogame.Controllers
                 return NotFound();
             }
 
-            return View(mine);
+            return RedirectToAction("Index", "Dashboard");
+
         }
 
         // GET: Mine/Create
@@ -55,7 +57,8 @@ namespace Ogame.Controllers
             ViewData["ActionID"] = new SelectList(_context.Actions, "TemporalActionID", "TemporalActionID");
             ViewData["CapsID"] = new SelectList(_context.Caps, "CapsID", "CapsID");
             ViewData["PlanetID"] = new SelectList(_context.Planets, "PlanetID", "PlanetID");
-            return View();
+            return RedirectToAction("Index", "Dashboard");
+
         }
 
         // POST: Mine/Create
@@ -74,7 +77,8 @@ namespace Ogame.Controllers
             ViewData["ActionID"] = new SelectList(_context.Actions, "TemporalActionID", "TemporalActionID", mine.ActionID);
             ViewData["CapsID"] = new SelectList(_context.Caps, "CapsID", "CapsID", mine.CapsID);
             ViewData["PlanetID"] = new SelectList(_context.Planets, "PlanetID", "PlanetID", mine.PlanetID);
-            return View(mine);
+            return RedirectToAction("Index", "Dashboard");
+
         }
 
         // GET: Mine/Edit/5
@@ -93,7 +97,8 @@ namespace Ogame.Controllers
             ViewData["ActionID"] = new SelectList(_context.Actions, "TemporalActionID", "TemporalActionID", mine.ActionID);
             ViewData["CapsID"] = new SelectList(_context.Caps, "CapsID", "CapsID", mine.CapsID);
             ViewData["PlanetID"] = new SelectList(_context.Planets, "PlanetID", "PlanetID", mine.PlanetID);
-            return View(mine);
+            return RedirectToAction("Index", "Dashboard");
+
         }
 
         // POST: Mine/Edit/5
@@ -131,7 +136,8 @@ namespace Ogame.Controllers
             ViewData["ActionID"] = new SelectList(_context.Actions, "TemporalActionID", "TemporalActionID", mine.ActionID);
             ViewData["CapsID"] = new SelectList(_context.Caps, "CapsID", "CapsID", mine.CapsID);
             ViewData["PlanetID"] = new SelectList(_context.Planets, "PlanetID", "PlanetID", mine.PlanetID);
-            return View(mine);
+            return RedirectToAction("Index", "Dashboard");
+
         }
 
         // GET: Mine/Delete/5
@@ -152,7 +158,8 @@ namespace Ogame.Controllers
                 return NotFound();
             }
 
-            return View(mine);
+            return RedirectToAction("Index", "Dashboard");
+
         }
 
         // POST: Mine/Delete/5
@@ -163,7 +170,8 @@ namespace Ogame.Controllers
             var mine = await _context.Mines.FindAsync(id);
             _context.Mines.Remove(mine);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Dashboard");
+
         }
 
         private bool MineExists(int id)

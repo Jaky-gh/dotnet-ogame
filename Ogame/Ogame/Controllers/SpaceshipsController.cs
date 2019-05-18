@@ -34,7 +34,7 @@ namespace Ogame.Controllers
                 _context.Spaceships.Where(p => p.Planet.UserID == user.Id).Include(s => s.Action).Include(s => s.Caps).Include(s => s.Planet).Include(s => s.Planet.User)
                 ;
 
-            return View(new Models.SpaceshipView.SpaceshipIndexViewInterface(await applicationDbContext.ToListAsync(), user));
+            return RedirectToAction("Index", "Dashboard");
         }
 
         // GET: Spaceships/Details/5
@@ -61,7 +61,7 @@ namespace Ogame.Controllers
             {
                 return NotFound();
             }
-            return View(new Models.SpaceshipView.SpaceshipDetailsViewInterface(spaceship, user));
+            return RedirectToAction("Index", "Dashboard");
         }
 
         // GET: Spaceships/Create

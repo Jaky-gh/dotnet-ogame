@@ -24,7 +24,7 @@ namespace Ogame.Controllers
         // GET: Caps
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Caps.ToListAsync());
+            return RedirectToAction("Index", "Dashboard");
         }
 
         // GET: Caps/Details/5
@@ -42,13 +42,14 @@ namespace Ogame.Controllers
                 return NotFound();
             }
 
-            return View(caps);
+            return RedirectToAction("Index", "Dashboard");
         }
 
         // GET: Caps/Create
         public IActionResult Create()
         {
-            return View();
+            return RedirectToAction("Index", "Dashboard");
+
         }
 
         // POST: Caps/Create
@@ -64,7 +65,8 @@ namespace Ogame.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(caps);
+            return RedirectToAction("Index", "Dashboard");
+
         }
 
         // GET: Caps/Edit/5
@@ -80,7 +82,8 @@ namespace Ogame.Controllers
             {
                 return NotFound();
             }
-            return View(caps);
+            return RedirectToAction("Index", "Dashboard");
+
         }
 
         // POST: Caps/Edit/5
@@ -115,7 +118,8 @@ namespace Ogame.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(caps);
+            return RedirectToAction("Index", "Dashboard");
+
         }
 
         // GET: Caps/Delete/5
@@ -133,7 +137,8 @@ namespace Ogame.Controllers
                 return NotFound();
             }
 
-            return View(caps);
+            return RedirectToAction("Index", "Dashboard");
+
         }
 
         // POST: Caps/Delete/5
@@ -144,7 +149,8 @@ namespace Ogame.Controllers
             var caps = await _context.Caps.FindAsync(id);
             _context.Caps.Remove(caps);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Dashboard");
+
         }
 
         private bool CapsExists(int id)

@@ -98,6 +98,7 @@ namespace Ogame.Controllers
             ViewData["user"] = await GetCurrentUserAsync();
 
             return View(new Models.PlanetView.PlanetDetailsViewInterface(planet, await GetCurrentUserAsync()));
+
         }
 
         // GET: Planets/Create
@@ -110,7 +111,8 @@ namespace Ogame.Controllers
             }
 
             ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id");
-            return View();
+            return RedirectToAction("Index", "Dashboard");
+
         }
 
         // POST: Planets/Create
@@ -141,7 +143,7 @@ namespace Ogame.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", planet.UserID);
-            return View(planet);
+            return RedirectToAction("Index", "Dashboard");
         }
 
         // GET: Planets/Edit/5
@@ -164,7 +166,7 @@ namespace Ogame.Controllers
                 return NotFound();
             }
             ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", planet.UserID);
-            return View(planet);
+            return RedirectToAction("Index", "Dashboard");
         }
 
         // POST: Planets/Edit/5
@@ -206,7 +208,7 @@ namespace Ogame.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["UserID"] = new SelectList(_context.Users, "Id", "Id", planet.UserID);
-            return View(planet);
+            return RedirectToAction("Index", "Dashboard");
         }
 
         // GET: Planets/Delete/5
@@ -232,7 +234,7 @@ namespace Ogame.Controllers
                 return NotFound();
             }
 
-            return View(planet);
+            return RedirectToAction("Index", "Dashboard");
         }
 
         // POST: Planets/Delete/5
@@ -249,7 +251,7 @@ namespace Ogame.Controllers
             var planet = await _context.Planets.FindAsync(id);
             _context.Planets.Remove(planet);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Dashboard");
         }
 
         private bool PlanetExists(int id)

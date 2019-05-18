@@ -34,7 +34,7 @@ namespace Ogame.Controllers
             }
             
             var applicationDbContext = _context.Actions.Include(t => t.Target);
-            return View(await applicationDbContext.ToListAsync());
+            return RedirectToAction("Index", "Dashboard");
         }
 
         // GET: TemporalActions/Details/5

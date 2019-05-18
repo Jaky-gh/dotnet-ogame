@@ -9,7 +9,7 @@ namespace Ogame.Data
 {
     public static class TemporalActionResolver
     {
-        public static readonly TimeSpan CycleDuration = new TimeSpan(0, 0, 0, 1);
+        public static readonly TimeSpan CycleDuration = new TimeSpan(0, 0, 1, 0);
 
 
         private static int IActionHolderSort(IActionHolder a1, IActionHolder a2)

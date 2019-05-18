@@ -25,7 +25,7 @@ namespace Ogame.Controllers
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.Defenses.Include(d => d.Action).Include(d => d.Caps).Include(d => d.Planet);
-            return View(await applicationDbContext.ToListAsync());
+            return RedirectToAction("Index", "Dashboard");
         }
 
         // GET: Defenses/Details/5
@@ -46,7 +46,7 @@ namespace Ogame.Controllers
                 return NotFound();
             }
 
-            return View(defense);
+            return RedirectToAction("Index", "Dashboard");
         }
 
         // GET: Defenses/Create
@@ -55,7 +55,7 @@ namespace Ogame.Controllers
             ViewData["ActionID"] = new SelectList(_context.Actions, "PlanetID", "PlanetID");
             ViewData["CapsID"] = new SelectList(_context.Caps, "PlanetID", "PlanetID");
             ViewData["PlanetID"] = new SelectList(_context.Planets, "PlanetID", "PlanetID");
-            return View();
+            return RedirectToAction("Index", "Dashboard");
         }
 
         // POST: Defenses/Create
@@ -74,7 +74,8 @@ namespace Ogame.Controllers
             ViewData["ActionID"] = new SelectList(_context.Actions, "PlanetID", "PlanetID", defense.ActionID);
             ViewData["CapsID"] = new SelectList(_context.Caps, "PlanetID", "PlanetID", defense.CapsID);
             ViewData["PlanetID"] = new SelectList(_context.Planets, "PlanetID", "PlanetID", defense.PlanetID);
-            return View(defense);
+            return RedirectToAction("Index", "Dashboard");
+
         }
 
         // GET: Defenses/Edit/5
@@ -93,7 +94,8 @@ namespace Ogame.Controllers
             ViewData["ActionID"] = new SelectList(_context.Actions, "PlanetID", "PlanetID", defense.ActionID);
             ViewData["CapsID"] = new SelectList(_context.Caps, "PlanetID", "PlanetID", defense.CapsID);
             ViewData["PlanetID"] = new SelectList(_context.Planets, "PlanetID", "PlanetID", defense.PlanetID);
-            return View(defense);
+            return RedirectToAction("Index", "Dashboard");
+
         }
 
         // POST: Defenses/Edit/5
@@ -131,7 +133,8 @@ namespace Ogame.Controllers
             ViewData["ActionID"] = new SelectList(_context.Actions, "PlanetID", "PlanetID", defense.ActionID);
             ViewData["CapsID"] = new SelectList(_context.Caps, "PlanetID", "PlanetID", defense.CapsID);
             ViewData["PlanetID"] = new SelectList(_context.Planets, "PlanetID", "PlanetID", defense.PlanetID);
-            return View(defense);
+            return RedirectToAction("Index", "Dashboard");
+
         }
 
         // GET: Defenses/Delete/5
@@ -152,7 +155,8 @@ namespace Ogame.Controllers
                 return NotFound();
             }
 
-            return View(defense);
+            return RedirectToAction("Index", "Dashboard");
+
         }
 
         // POST: Defenses/Delete/5
@@ -163,7 +167,8 @@ namespace Ogame.Controllers
             var defense = await _context.Defenses.FindAsync(id);
             _context.Defenses.Remove(defense);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index", "Dashboard");
+
         }
 
         private bool DefenseExists(int id)
