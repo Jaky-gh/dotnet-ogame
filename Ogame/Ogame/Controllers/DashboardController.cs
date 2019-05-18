@@ -33,6 +33,7 @@ namespace Ogame.Controllers
             {
                 Planet planet = await PlanetRandomizer.FindPlanetForNewPlayer(_context);
                 planet.User = user;
+                planet.Dist_to_star = 100;
                 if (planet.PlanetID != 0)
                 {
                     _context.Planets.Update(planet);
