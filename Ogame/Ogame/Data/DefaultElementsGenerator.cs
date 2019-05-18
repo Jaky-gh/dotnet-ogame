@@ -125,7 +125,7 @@ namespace Ogame.Data
                 Ressource = mineRessources,
                 Planet = planet,
                 PlanetID = planet.PlanetID,
-                CollectRate = mineRessources == Mine.Ressources.Deuterium ? (planet.Dist_to_star - 50f) / 995f : 10
+                CollectRate = 0.1f + (mineRessources ==  Mine.Ressources.Deuterium ? (planet.Dist_to_star - 50f) / 995f : 10f)
             };
 
             try
