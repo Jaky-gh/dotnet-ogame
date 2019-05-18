@@ -177,7 +177,7 @@
                 {
                     <a class="upgrade-button" asp-controller="Planets" asp-action="UpgradeSpaceship" asp-route-id="@spaceship.SpaceshipID"><img class="upgrade-icon" src="/images/upgrade-icon.png" /></a>
                 }
-                @if (canAttack  && spaceship.Action.Type != TemporalAction.ActionType.Attack)
+                @if (canAttack  && spaceship.Action.Type != TemporalAction.ActionType.Attack && spaceship.Energy >= 10)
                 {
                     <a class="fight-button" asp-controller="Spaceships" asp-action="Attack" asp-route-id="@spaceship.SpaceshipID"><img class="fight-icon" src="/images/fight-icon.png" /></a>
                 }
